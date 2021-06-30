@@ -1,0 +1,15 @@
+{
+  "service": {
+    "Name": "one-network-integration-service",
+    "Port": 8080,
+    "Tags": ["openlmis-service"]
+  },
+  "raml": "src/main/resources/api-definition.yaml",
+  "path": [
+    "one-network-integration-service",
+    "one-network-integration-service/docs",
+    "one-network-integration-service/docs/<all>",
+    "one-network-integration-service/webjars",
+    "one-network-integration-service/webjars/<all>"
+  ]
+}
