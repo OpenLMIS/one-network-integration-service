@@ -18,12 +18,12 @@ package org.openlmis.onenetwork.integration.security;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
-import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
+import org.springframework.util.StringUtils;
 
 /**
  * Implementation of {@link UserAuthenticationConverter}. Converts from an Authentication
