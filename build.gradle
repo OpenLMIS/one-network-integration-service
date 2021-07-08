@@ -47,6 +47,7 @@ dependencies {
     compile "com.github.tomakehurst:wiremock:1.58"
 
     compile group: 'javax.interceptor', name: 'javax.interceptor-api', version: '1.2'
+    implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
 
     testCompile "junit:junit"
     testCompile "org.powermock:powermock-api-mockito2:2.0.4"
@@ -54,6 +55,11 @@ dependencies {
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile 'org.springframework.security:spring-security-test'
     testCompile "org.springframework:spring-test"
+    testCompile ('org.apache.sshd:apache-sshd:2.7.0') {
+        exclude group: 'org.apache.sshd', module: 'sshd-netty'
+        exclude group: 'org.apache.sshd', module: 'sshd-mina'
+    }
+    testCompile 'com.jcraft:jsch:0.1.55'
 
     testCompile "com.jayway.restassured:rest-assured:2.7.0"
     testCompile "guru.nidi.raml:raml-tester:0.8.15"
@@ -113,7 +119,6 @@ task integrationTest(type: Test) {
     }
     mustRunAfter test
     environment 'BASE_URL', "http://localhost"
-    exclude '**/demodata/**'
 }
 
 tasks.withType(Test) {

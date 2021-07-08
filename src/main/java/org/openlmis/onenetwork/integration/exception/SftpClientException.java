@@ -13,28 +13,12 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.i18n;
+package org.openlmis.onenetwork.integration.exception;
 
-import java.util.Arrays;
+public class SftpClientException extends Exception {
 
-public abstract class MessageKeys {
-  private static final String DELIMITER = ".";
-  private static final String SERVICE_PREFIX = "onenetwork.integration";
-  private static final String ERROR_PREFIX = join(SERVICE_PREFIX, "error");
-  private static final String SFTP = "sftp";
-
-  public static final String ERROR_SFTP_CHANNEL_OPEN =
-          join(ERROR_PREFIX, SFTP, "channelOpen");
-  public static final String ERROR_SFTP_PUT_FILE =
-          join(ERROR_PREFIX, SFTP, "putFile");
-  public static final String ERROR_SFTP_CONNECT =
-          join(ERROR_PREFIX, SFTP, "connect");
-
-  private MessageKeys() {
-    throw new UnsupportedOperationException();
+  public SftpClientException(final String message, final Throwable cause) {
+    super(message, cause);
   }
 
-  private static String join(String... params) {
-    return String.join(DELIMITER, Arrays.asList(params));
-  }
 }

@@ -15,14 +15,22 @@
 
 package org.openlmis.onenetwork.integration.service;
 
+import org.openlmis.onenetwork.integration.sftp.SftpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
 public class Scheduler {
   private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final SftpService sftpService;
+
+  @Autowired
+  public Scheduler(SftpService sftpService) {
+    this.sftpService = sftpService;
+  }
 
   /**
    * This scheduler will run tasks to send CSV files to the SFTP server.
@@ -30,7 +38,7 @@ public class Scheduler {
   @Scheduled(cron = "${onenetwork.integration.cron}", zone = "${time.zoneId}")
   public void scheduleTask() {
     logger.info("SCHEDULER - Running task using cron job.");
-    // task execution logic
+    sftpService.send();
   }
 
 }

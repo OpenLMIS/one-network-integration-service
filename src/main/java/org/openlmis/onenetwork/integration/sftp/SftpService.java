@@ -13,28 +13,25 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.i18n;
+package org.openlmis.onenetwork.integration.sftp;
 
-import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public abstract class MessageKeys {
-  private static final String DELIMITER = ".";
-  private static final String SERVICE_PREFIX = "onenetwork.integration";
-  private static final String ERROR_PREFIX = join(SERVICE_PREFIX, "error");
-  private static final String SFTP = "sftp";
+@Service
+public class SftpService {
 
-  public static final String ERROR_SFTP_CHANNEL_OPEN =
-          join(ERROR_PREFIX, SFTP, "channelOpen");
-  public static final String ERROR_SFTP_PUT_FILE =
-          join(ERROR_PREFIX, SFTP, "putFile");
-  public static final String ERROR_SFTP_CONNECT =
-          join(ERROR_PREFIX, SFTP, "connect");
+  private final SftpClient sftpClient;
 
-  private MessageKeys() {
-    throw new UnsupportedOperationException();
+  @Autowired
+  public SftpService(SftpClient sftpClient) {
+    this.sftpClient = sftpClient;
   }
 
-  private static String join(String... params) {
-    return String.join(DELIMITER, Arrays.asList(params));
+  public void send() {
+    byte[] bytes = "Simple test...".getBytes(StandardCharsets.UTF_8);
+    sftpClient.putFileToSftp(bytes, "test.txt");
   }
+
 }
