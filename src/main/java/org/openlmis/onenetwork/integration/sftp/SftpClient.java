@@ -61,7 +61,7 @@ public class SftpClient {
   public void putFileToSftp(byte[] bytes, String fileName) {
     try {
       connect();
-      openSFtpChannel(session);
+      openSftpChannel(session);
       final String filePath = sftpConfiguration.getRemoteDir() + fileName;
       putCsvFileOnSftpServer(new ByteArrayInputStream(bytes), filePath);
       disconnect();
@@ -97,7 +97,7 @@ public class SftpClient {
     }
   }
 
-  private void openSFtpChannel(final Session session) throws SftpClientException {
+  private void openSftpChannel(final Session session) throws SftpClientException {
     try {
       channelSftp = (ChannelSftp) session.openChannel(sftpConfiguration.getChannelType());
       channelSftp.connect();
