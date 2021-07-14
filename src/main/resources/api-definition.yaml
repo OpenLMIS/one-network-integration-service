@@ -10,6 +10,7 @@ documentation:
     content: Welcome to the OpenLMIS One Network Integration Service documentation. This minimal API is intended for illustrative purposes.
 
 schemas:
+  - schedulerStatus: !include schemas/schedulerStatus.json
   - auditLogEntry: !include schemas/auditLogEntry.json
 
   - auditLogEntryArray: |
@@ -132,5 +133,35 @@ resourceTypes:
         body:
           application/json:
             schema: version
+/api/scheduler:
+  /status:
+    displayName: Scheduler Status
+    get:
+      description: Get scheduler status
+      responses:
+        200:
+          description: Returns scheduler status information.
+          headers:
+          body:
+            application/json:
+              schema: schedulerStatus
+  /enable:
+    displayName: Enable scheduler
+    put:
+      description: Turns on the scheduler
+      responses:
+        200:
+          headers:
+          body:
+            application/json:
+              schema: schedulerStatus
+  /disable:
+    displayName: Disable scheduler
+    put:
+      description: Turns off the scheduler
+      responses:
+        200:
+          body:
+            application/json:
+              schema: schedulerStatus
 
-/api:
