@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Orderable",
+  "description": "A single orderable",
+  "properties": {
+    "id": {
+      "type": "string",
+      "title": "id"
+    },
+    "productCode": {
+      "type": "string",
+      "title": "productCode"
+    },
+    "fullProductName": {
+      "type": "string",
+      "title": "fullProductName"
+    }
+  },
+  "required": [
+    "productCode"
+  ]
+}

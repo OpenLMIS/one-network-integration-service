@@ -22,6 +22,7 @@ schemas:
   - localizedErrorResponse: !include schemas/localizedErrorResponse.json
 
   - version: !include schemas/version.json
+  - orderable: !include schemas/orderable.json
 
 traits:
   - secured:
@@ -133,8 +134,8 @@ resourceTypes:
         body:
           application/json:
             schema: version
-/api/scheduler:
-  /status:
+/api:
+  /scheduler/status:
     displayName: Scheduler Status
     get:
       description: Get scheduler status
@@ -145,7 +146,7 @@ resourceTypes:
           body:
             application/json:
               schema: schedulerStatus
-  /enable:
+  /scheduler/enable:
     displayName: Enable scheduler
     put:
       description: Turns on the scheduler
@@ -155,7 +156,7 @@ resourceTypes:
           body:
             application/json:
               schema: schedulerStatus
-  /disable:
+  /scheduler/disable:
     displayName: Disable scheduler
     put:
       description: Turns off the scheduler
@@ -164,4 +165,13 @@ resourceTypes:
           body:
             application/json:
               schema: schedulerStatus
+  /integration/orderable:
+    displayName: createUpdateOrderable
+    post:
+      description: Receives product related data and writes them to the buffer
+      responses:
+        200:
+          body:
+            application/json:
+              schema: orderable
 
