@@ -15,13 +15,10 @@
 
 package org.openlmis.onenetwork.integration.web;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import org.openlmis.onenetwork.integration.domain.Orderable;
-import org.openlmis.onenetwork.integration.service.OrderableCsvService;
-import org.openlmis.onenetwork.integration.sftp.SftpClient;
+import org.openlmis.onenetwork.integration.service.OrderableQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,14 +33,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/integration")
 public class OrderableController {
 
-  private final OrderableCsvService csvService;
-  private final SftpClient sftpClient;
+  OrderableQueue orderableQueue;
 
   @Autowired
-  public OrderableController(OrderableCsvService csvService,
-                             SftpClient sftpClient) {
-    this.csvService = csvService;
-    this.sftpClient = sftpClient;
+  public OrderableController(OrderableQueue orderableQueue) {
+    this.orderableQueue = orderableQueue;
   }
 
   /**
@@ -54,10 +48,7 @@ public class OrderableController {
   @PostMapping("/orderable")
   public ResponseEntity<Orderable> orderableIntegration(
           @RequestBody Orderable orderable) throws IOException {
-    File csv = csvService.createCsvFile(
-            new Orderable(orderable.getProductCode(), orderable.getFullProductName()),
-            new File("products.csv"));
-    sftpClient.putFileToSftp(Files.readAllBytes(csv.toPath()), "products.csv");
+    orderableQueue.add(orderable);
     return ResponseEntity.ok()
             .body(orderable);
   }

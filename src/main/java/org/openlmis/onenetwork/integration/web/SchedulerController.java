@@ -17,6 +17,7 @@ package org.openlmis.onenetwork.integration.web;
 
 import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
 import org.openlmis.onenetwork.integration.domain.SchedulerStatus;
+import org.openlmis.onenetwork.integration.sftp.SftpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class SchedulerController {
   private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerController.class);
 
   private final SchedulerConfiguration schedulerConfiguration;
+
+  @Autowired
+  private SftpService sftpService;
 
   @Autowired
   public SchedulerController(SchedulerConfiguration schedulerConfiguration) {
@@ -76,6 +80,10 @@ public class SchedulerController {
   public SchedulerStatus disableScheduler() {
     LOGGER.debug("Disabling the scheduler");
     this.schedulerConfiguration.setEnable(false);
+
+    LOGGER.debug("Sending collected data while disabled scheduler");
+    sftpService.send();
+
     return SchedulerStatus.builder()
             .schedulerEnabled(schedulerConfiguration.getEnable())
             .build();

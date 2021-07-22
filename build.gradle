@@ -40,7 +40,7 @@ dependencies {
     compile 'org.webjars.npm:api-console:3.0.17'
     compile 'org.apache.commons:commons-lang3'
     compile 'org.apache.commons:commons-csv:1.4'
-    compile 'org.apache.commons:commons-collections4:4.1'
+    compile 'org.apache.commons:commons-collections4:4.2'
     compile 'commons-io:commons-io:2.5'
     compile "org.slf4j:slf4j-ext"
     compile "com.github.tomakehurst:wiremock:1.58"

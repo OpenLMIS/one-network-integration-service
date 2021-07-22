@@ -15,37 +15,13 @@
 
 package org.openlmis.onenetwork.integration.service;
 
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvParser;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import org.openlmis.onenetwork.integration.domain.Orderable;
-import org.openlmis.onenetwork.integration.domain.OrderableForCsv;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderableCsvService {
+public class OrderableQueue extends BasicQueue<Orderable> {
 
-  /**
-   * Creates csv file for orderables.
-   */
-  public File createCsvFile(List<Orderable> orderables, File csvFile)
-          throws IOException {
-    CsvMapper csvMapper = new CsvMapper();
-    csvMapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
-    CsvSchema csvSchema = csvMapper
-            .schemaFor(OrderableForCsv.class)
-            .withHeader();
-    csvMapper.addMixIn(Orderable.class, OrderableForCsv.class);
-
-    ObjectWriter csvWriter = csvMapper.writer(csvSchema.withLineSeparator("\n"));
-    csvWriter.writeValue(csvFile, orderables);
-
-    return csvFile;
+  public OrderableQueue() {
+    super();
   }
 }

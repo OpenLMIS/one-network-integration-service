@@ -124,5 +124,4 @@ public class SftpClient {
     final byte[] key = Base64.getDecoder().decode(bytes);
     return new HostKey(sftpConfiguration.getHost(), key);
   }
-
 }
