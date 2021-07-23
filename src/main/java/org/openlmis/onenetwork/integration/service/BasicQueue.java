@@ -46,6 +46,7 @@ public abstract class BasicQueue<T> {
       while (i.hasNext()) {
         result.add((T) i.next());
       }
+      queue.clear();
 
       return result;
     }
