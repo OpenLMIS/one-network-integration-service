@@ -18,6 +18,8 @@ package org.openlmis.onenetwork.integration.service;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.openlmis.onenetwork.integration.domain.Orderable;
@@ -37,8 +39,11 @@ public class OrderableQueueTest {
   @Test
   public void shouldAddOrderableToListAndReturnList() {
     orderableQueue.add(orderable);
-    assertEquals(Arrays.asList(orderable), orderableQueue.getList());
-    assertEquals("testCode", orderableQueue.getList().get(0).getProductCode());
-    assertEquals("testName", orderableQueue.getList().get(0).getFullProductName());
+    List result = orderableQueue.getList();
+    Orderable resultOrderable = (Orderable) result.get(0);
+
+    assertEquals(Arrays.asList(orderable), result);
+    assertEquals("testCode", resultOrderable.getProductCode());
+    assertEquals("testName", resultOrderable.getFullProductName());
   }
 }
