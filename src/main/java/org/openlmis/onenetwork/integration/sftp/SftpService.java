@@ -21,7 +21,8 @@ import java.nio.file.Files;
 import java.util.List;
 
 import org.openlmis.onenetwork.integration.domain.Orderable;
-import org.openlmis.onenetwork.integration.service.OrderableCsvService;
+import org.openlmis.onenetwork.integration.domain.OrderableForCsv;
+import org.openlmis.onenetwork.integration.service.CsvService;
 import org.openlmis.onenetwork.integration.service.OrderableQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ import org.springframework.stereotype.Service;
 public class SftpService {
 
   private final SftpClient sftpClient;
-  private final OrderableCsvService csvService;
+  private final CsvService csvService;
   private OrderableQueue orderableQueue;
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -41,7 +42,7 @@ public class SftpService {
    *
    */
   @Autowired
-  public SftpService(SftpClient sftpClient, OrderableCsvService csvService,
+  public SftpService(SftpClient sftpClient, CsvService csvService,
                      OrderableQueue orderableQueue) {
     this.sftpClient = sftpClient;
     this.csvService = csvService;
@@ -49,19 +50,16 @@ public class SftpService {
   }
 
   public void send() {
-    sendProducts();
+    send(orderableQueue.getList(), "products.csv", Orderable.class, OrderableForCsv.class);
   }
 
-  private void sendProducts() {
+  private void send(List<?> elements, String fileName, Class<?> type, Class<?> mixin) {
     try {
-      List<Orderable> orderables = orderableQueue.getList();
-      if (orderables.size() != 0 && !orderables.equals(null)) {
+      if (elements.size() != 0 && !elements.equals(null)) {
         File csv = csvService.createCsvFile(
-            orderables,
-            new File("products.csv"));
-        sftpClient.putFileToSftp(Files.readAllBytes(csv.toPath()), "products.csv");
-      } else {
-        logger.debug("Orderables list was empty");
+            elements,
+            new File(fileName), type, mixin);
+        sftpClient.putFileToSftp(Files.readAllBytes(csv.toPath()), fileName);
       }
     } catch (IOException e) {
       logger.error(e.getMessage(), e);

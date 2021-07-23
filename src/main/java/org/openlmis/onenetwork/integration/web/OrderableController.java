@@ -17,6 +17,7 @@ package org.openlmis.onenetwork.integration.web;
 
 import java.io.IOException;
 
+import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
 import org.openlmis.onenetwork.integration.domain.Orderable;
 import org.openlmis.onenetwork.integration.service.OrderableQueue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/integration")
 public class OrderableController {
 
-  OrderableQueue orderableQueue;
+  private OrderableQueue orderableQueue;
+  private SchedulerConfiguration schedulerConfiguration;
 
   @Autowired
-  public OrderableController(OrderableQueue orderableQueue) {
+  public OrderableController(OrderableQueue orderableQueue,
+                             SchedulerConfiguration schedulerConfiguration) {
     this.orderableQueue = orderableQueue;
+    this.schedulerConfiguration = schedulerConfiguration;
   }
 
   /**
@@ -48,7 +52,9 @@ public class OrderableController {
   @PostMapping("/orderable")
   public ResponseEntity<Orderable> orderableIntegration(
           @RequestBody Orderable orderable) throws IOException {
-    orderableQueue.add(orderable);
+    if (this.schedulerConfiguration.getEnable()) {
+      orderableQueue.add(orderable);
+    }
     return ResponseEntity.ok()
             .body(orderable);
   }
