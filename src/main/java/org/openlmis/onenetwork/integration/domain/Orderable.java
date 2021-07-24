@@ -15,34 +15,65 @@
 
 package org.openlmis.onenetwork.integration.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Getter
-@Setter
-@ToString
+@JsonDeserialize(builder = Orderable.Builder.class)
 public class Orderable {
 
-  private String managingEntName;
+  private final String managingEntName;
 
-  private String managingOrgName;
+  private final String managingOrgName;
 
-  private String productCode;
+  private final String productCode;
 
-  private String fullProductName;
+  private final String fullProductName;
 
-  private String displayName;
+  private final String displayName;
 
-  /**
-   * Displays version information.
-   *
-   */
-  public Orderable(String productCode, String fullProductName) {
+  private Orderable(String productCode, String fullProductName) {
     this.productCode = productCode;
     this.fullProductName = fullProductName;
-    this.managingEntName = "OpenLMIS Demo";
-    this.managingOrgName = "OpenLMIS Demo";
     this.displayName = productCode + "-" + fullProductName;
+    this.managingOrgName = "OpenLMIS Demo";
+    this.managingEntName = "OpenLMIS Demo";
   }
+
+  /**
+   * constructor...
+   *
+   */
+  public OrderableForCsv toCsvObject() {
+    return new OrderableForCsv(
+            this.managingEntName,
+            this.managingOrgName,
+            this.productCode,
+            this.displayName,
+            this.fullProductName);
+  }
+
+
+  @JsonPOJOBuilder
+  public static class Builder {
+
+    String productCode;
+    String fullProductName;
+
+    Builder withProductCode(String productCode) {
+      this.productCode = productCode;
+      return this;
+    }
+
+    Builder withFullProductName(String fullProductName) {
+      this.fullProductName = fullProductName;
+      return this;
+    }
+
+    public Orderable build() {
+      return new Orderable(productCode, fullProductName);
+    }
+  }
+
 }

@@ -13,35 +13,35 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.domain;
+package org.openlmis.onenetwork.integration.service.referencedata;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@JsonPropertyOrder({
-        "ManagingEntName",
-        "ManagingOrgName",
-        "ItemName",
-        "DisplayName",
-        "Description"
-})
 @Getter
-@RequiredArgsConstructor
-public class OrderableForCsv {
-  @JsonProperty("ManagingEntName")
-  private final String managingEntName;
+@Setter
+@EqualsAndHashCode()
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class OrderableDto {
 
-  @JsonProperty("ManagingOrgName")
-  private final String managingOrgName;
+  private String managingEntName;
 
-  @JsonProperty("ItemName")
-  private final String productCode;
+  private String managingOrgName;
 
-  @JsonProperty("DisplayName")
-  private final String displayName;
+  private String productCode;
 
-  @JsonProperty("Description")
-  private final String fullProductName;
+  private String fullProductName;
+
+  private String displayName;
+
+  /**
+   * Creates orderable object.
+   */
+  public OrderableDto() {
+    this.displayName = this.getProductCode() + "-" + this.getFullProductName();
+    this.managingOrgName = "OpenLMIS Demo";
+    this.managingEntName = "OpenLMIS Demo";
+  }
 }

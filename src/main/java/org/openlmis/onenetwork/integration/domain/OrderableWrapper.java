@@ -15,33 +15,21 @@
 
 package org.openlmis.onenetwork.integration.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@JsonPropertyOrder({
-        "ManagingEntName",
-        "ManagingOrgName",
-        "ItemName",
-        "DisplayName",
-        "Description"
-})
+@ToString
 @Getter
-@RequiredArgsConstructor
-public class OrderableForCsv {
-  @JsonProperty("ManagingEntName")
-  private final String managingEntName;
+@Setter
+public class OrderableWrapper {
 
-  @JsonProperty("ManagingOrgName")
-  private final String managingOrgName;
+  private List<Orderable> content;
 
-  @JsonProperty("ItemName")
-  private final String productCode;
-
-  @JsonProperty("DisplayName")
-  private final String displayName;
-
-  @JsonProperty("Description")
-  private final String fullProductName;
+  public OrderableWrapper() {
+    content = new ArrayList<>();
+  }
 }

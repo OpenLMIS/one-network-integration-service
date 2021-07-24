@@ -15,8 +15,15 @@
 
 package org.openlmis.onenetwork.integration.web;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
+import org.openlmis.onenetwork.integration.domain.Orderable;
+import org.openlmis.onenetwork.integration.domain.OrderableForCsv;
 import org.openlmis.onenetwork.integration.domain.SchedulerStatus;
+import org.openlmis.onenetwork.integration.service.CsvService;
+import org.openlmis.onenetwork.integration.service.referencedata.OrderableDataService;
 import org.openlmis.onenetwork.integration.sftp.SftpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +42,23 @@ public class SchedulerController {
   private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerController.class);
 
   private final SchedulerConfiguration schedulerConfiguration;
+  private final OrderableDataService orderableService;
+  private final CsvService csvService;
 
   @Autowired
   private SftpService sftpService;
 
+  /**
+   * xxxxxx the schedule.
+   *
+   */
   @Autowired
-  public SchedulerController(SchedulerConfiguration schedulerConfiguration) {
+  public SchedulerController(SchedulerConfiguration schedulerConfiguration,
+                             OrderableDataService orderableService,
+                             CsvService csvService) {
     this.schedulerConfiguration = schedulerConfiguration;
+    this.orderableService = orderableService;
+    this.csvService = csvService;
   }
 
   /**
@@ -65,6 +82,12 @@ public class SchedulerController {
   @PutMapping("/enable")
   public SchedulerStatus enableScheduler() {
     LOGGER.debug("Enabling the scheduler");
+    System.out.println("szukam orderabli");
+    List<OrderableForCsv> objectsToCsvList = this.orderableService.getAllOrderables()
+            .stream()
+            .map(Orderable::toCsvObject)
+            .collect(Collectors.toList());
+    sftpService.send(objectsToCsvList, OrderableForCsv.class, this.csvService.getCsvName());
     this.schedulerConfiguration.setEnable(true);
     return SchedulerStatus.builder()
             .schedulerEnabled(schedulerConfiguration.getEnable())

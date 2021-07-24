@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openlmis.onenetwork.integration.domain.Orderable;
 import org.openlmis.onenetwork.integration.domain.OrderableForCsv;
@@ -28,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class SftpService {
@@ -49,16 +51,26 @@ public class SftpService {
     this.orderableQueue = orderableQueue;
   }
 
+  /**
+   * SftpService constructor.
+   *
+   */
   public void send() {
-    send(orderableQueue.getList(), "products.csv", Orderable.class, OrderableForCsv.class);
+    List<OrderableForCsv> list = orderableQueue.getList().stream()
+            .map(Orderable::toCsvObject)
+            .collect(Collectors.toList());
+    send(list, OrderableForCsv.class, this.csvService.getCsvName());
   }
 
-  private void send(List<?> elements, String fileName, Class<?> type, Class<?> mixin) {
+  /**
+   * SftpService constructor.
+   *
+   */
+  public <T> void send(List<T> elements, Class<T> type, String fileName) {
     try {
-      if (elements.size() != 0 && !elements.equals(null)) {
+      if (!CollectionUtils.isEmpty(elements)) {
         File csv = csvService.createCsvFile(
-            elements,
-            new File(fileName), type, mixin);
+            elements, type, new File(fileName));
         sftpClient.putFileToSftp(Files.readAllBytes(csv.toPath()), fileName);
       }
     } catch (IOException e) {
