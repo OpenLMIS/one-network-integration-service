@@ -15,8 +15,6 @@
 
 package org.openlmis.onenetwork.integration.web;
 
-import java.io.IOException;
-
 import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
 import org.openlmis.onenetwork.integration.domain.Orderable;
 import org.openlmis.onenetwork.integration.service.OrderableQueue;
@@ -27,9 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Controller used for getting information about orderables.
- */
 @RestController
 @RequestMapping("/api/integration")
 public class OrderableController {
@@ -47,11 +42,11 @@ public class OrderableController {
   /**
    * Receives product related data and writes them to the buffer.
    *
-   * @return {Orderable} Returns Orderable.
+   * @return {@link Orderable}
    */
   @PostMapping("/orderable")
   public ResponseEntity<Orderable> orderableIntegration(
-          @RequestBody Orderable orderable) throws IOException {
+          @RequestBody Orderable orderable) {
     if (this.schedulerConfiguration.getEnable()) {
       orderableQueue.add(orderable);
     }

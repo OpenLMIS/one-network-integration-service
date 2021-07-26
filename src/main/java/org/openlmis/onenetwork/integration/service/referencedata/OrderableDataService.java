@@ -15,28 +15,24 @@
 
 package org.openlmis.onenetwork.integration.service.referencedata;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.openlmis.onenetwork.integration.domain.Orderable;
 import org.openlmis.onenetwork.integration.domain.OrderableWrapper;
 import org.openlmis.onenetwork.integration.service.AuthService;
 import org.openlmis.onenetwork.integration.service.request.RequestHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class OrderableDataService {
-
-  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   @Value("${service.url}")
   private String referencedataUrl;
@@ -44,39 +40,36 @@ public class OrderableDataService {
   private static final String SERVICE_URL = "/api/orderables/";
 
   private final AuthService authService;
+  private final RestTemplate restTemplate;
 
   @Autowired
-  public OrderableDataService(AuthService authService) {
+  public OrderableDataService(AuthService authService,
+                              RestTemplate restTemplate) {
+    this.restTemplate = restTemplate;
     this.authService = authService;
   }
 
   /**
-   * Fetch all orderables.
+   * Fetch all orderables from referencedata service.
+   *
+   * @return List of {@link Orderable} or empty list if
+   *     referencedata service returned empty content.
    */
   public List<Orderable> getAllOrderables() {
-    RestTemplate restTemplate = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
     String url = referencedataUrl + SERVICE_URL;
-    try {
-      headers.setBearerAuth(authService.obtainAccessToken());
+    headers.setBearerAuth(authService.obtainAccessToken());
 
-      OrderableWrapper responseEntity = restTemplate.exchange(
-              RequestHelper.createUri(url),
-              HttpMethod.GET,
-              new HttpEntity<>(headers),
-              OrderableWrapper.class).getBody();
+    Optional<OrderableWrapper> orderableWrapperOptional = Optional.ofNullable(restTemplate.exchange(
+            RequestHelper.createUri(url),
+            HttpMethod.GET,
+            new HttpEntity<>(headers),
+            OrderableWrapper.class)
+            .getBody());
 
-      System.out.println("to i :" + responseEntity.getContent().get(0).getManagingEntName());
-      System.out.println("to y :" + responseEntity.getContent().get(0).getDisplayName());
-      System.out.println("to h :" + responseEntity.getContent().get(0).getProductCode());
-      return responseEntity.getContent();
-    } catch (HttpStatusCodeException ex) {
-      logger.error(
-              "Unable to fetch orderables from referencedata service "
-                      + "Error code: {}, response message: {}",
-              ex.getStatusCode(), ex.getMessage()
-      );
+    if (orderableWrapperOptional.isPresent()) {
+      return orderableWrapperOptional.get().getContent();
     }
-    return new ArrayList<>();
+    return Collections.emptyList();
   }
 }

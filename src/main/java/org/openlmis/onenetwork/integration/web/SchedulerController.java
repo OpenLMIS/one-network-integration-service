@@ -15,16 +15,10 @@
 
 package org.openlmis.onenetwork.integration.web;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
-import org.openlmis.onenetwork.integration.domain.Orderable;
-import org.openlmis.onenetwork.integration.domain.OrderableForCsv;
 import org.openlmis.onenetwork.integration.domain.SchedulerStatus;
-import org.openlmis.onenetwork.integration.service.CsvService;
-import org.openlmis.onenetwork.integration.service.referencedata.OrderableDataService;
-import org.openlmis.onenetwork.integration.sftp.SftpService;
+import org.openlmis.onenetwork.integration.service.ProcessingService;
+import org.openlmis.onenetwork.integration.service.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,29 +36,19 @@ public class SchedulerController {
   private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerController.class);
 
   private final SchedulerConfiguration schedulerConfiguration;
-  private final OrderableDataService orderableService;
-  private final CsvService csvService;
+  private final ProcessingService processingService;
 
-  @Autowired
-  private SftpService sftpService;
-
-  /**
-   * xxxxxx the schedule.
-   *
-   */
   @Autowired
   public SchedulerController(SchedulerConfiguration schedulerConfiguration,
-                             OrderableDataService orderableService,
-                             CsvService csvService) {
+                             ProcessingService processingService) {
     this.schedulerConfiguration = schedulerConfiguration;
-    this.orderableService = orderableService;
-    this.csvService = csvService;
+    this.processingService = processingService;
   }
 
   /**
-   * Enables the schedule.
+   * Returns the {@link Scheduler} status.
    *
-   * @return {SchedulerStatus} Returns scheduler status info.
+   * @return {@link SchedulerStatus} info.
    */
   @RequestMapping("/status")
   public SchedulerStatus schedulerStatus() {
@@ -77,17 +61,12 @@ public class SchedulerController {
   /**
    * Enables the schedule.
    *
-   * @return {SchedulerStatus} Returns scheduler status info.
+   * @return {@link SchedulerStatus} info.
    */
   @PutMapping("/enable")
   public SchedulerStatus enableScheduler() {
     LOGGER.debug("Enabling the scheduler");
-    System.out.println("szukam orderabli");
-    List<OrderableForCsv> objectsToCsvList = this.orderableService.getAllOrderables()
-            .stream()
-            .map(Orderable::toCsvObject)
-            .collect(Collectors.toList());
-    sftpService.send(objectsToCsvList, OrderableForCsv.class, this.csvService.getCsvName());
+    processingService.processCsvData();
     this.schedulerConfiguration.setEnable(true);
     return SchedulerStatus.builder()
             .schedulerEnabled(schedulerConfiguration.getEnable())
@@ -97,7 +76,7 @@ public class SchedulerController {
   /**
    * Disables the schedule.
    *
-   * @return {SchedulerStatus} Returns scheduler status info.
+   * @return {@link SchedulerStatus} info.
    */
   @PutMapping("/disable")
   public SchedulerStatus disableScheduler() {
@@ -105,7 +84,7 @@ public class SchedulerController {
     this.schedulerConfiguration.setEnable(false);
 
     LOGGER.debug("Sending collected data while disabled scheduler");
-    sftpService.send();
+    processingService.processQueueData();
 
     return SchedulerStatus.builder()
             .schedulerEnabled(schedulerConfiguration.getEnable())

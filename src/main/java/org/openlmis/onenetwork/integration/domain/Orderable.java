@@ -42,10 +42,10 @@ public class Orderable {
   }
 
   /**
-   * constructor...
-   *
+   * Converts the {@link Orderable} to {@link OrderableForCsv} object.
+   * @return {@link OrderableForCsv}
    */
-  public OrderableForCsv toCsvObject() {
+  public OrderableForCsv toOrderableForCsv() {
     return new OrderableForCsv(
             this.managingEntName,
             this.managingOrgName,
@@ -54,19 +54,18 @@ public class Orderable {
             this.fullProductName);
   }
 
-
   @JsonPOJOBuilder
   public static class Builder {
 
     String productCode;
     String fullProductName;
 
-    Builder withProductCode(String productCode) {
+    public Builder withProductCode(String productCode) {
       this.productCode = productCode;
       return this;
     }
 
-    Builder withFullProductName(String fullProductName) {
+    public Builder withFullProductName(String fullProductName) {
       this.fullProductName = fullProductName;
       return this;
     }

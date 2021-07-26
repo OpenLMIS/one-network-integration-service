@@ -19,12 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.openlmis.onenetwork.integration.domain.Orderable;
-import org.openlmis.onenetwork.integration.domain.OrderableForCsv;
-import org.openlmis.onenetwork.integration.service.CsvService;
-import org.openlmis.onenetwork.integration.service.OrderableQueue;
+import org.openlmis.onenetwork.integration.service.csv.CsvService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,43 +30,29 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class SftpService {
 
-  private final SftpClient sftpClient;
-  private final CsvService csvService;
-  private OrderableQueue orderableQueue;
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  /**
-   * SftpService constructor.
-   *
-   */
+  private final SftpClient sftpClient;
+  private final CsvService csvService;
+
   @Autowired
-  public SftpService(SftpClient sftpClient, CsvService csvService,
-                     OrderableQueue orderableQueue) {
+  public SftpService(SftpClient sftpClient, CsvService csvService) {
     this.sftpClient = sftpClient;
     this.csvService = csvService;
-    this.orderableQueue = orderableQueue;
   }
 
   /**
-   * SftpService constructor.
+   * Sends the data of type {@code T} to SFTP server with provided file name.
    *
-   */
-  public void send() {
-    List<OrderableForCsv> list = orderableQueue.getList().stream()
-            .map(Orderable::toCsvObject)
-            .collect(Collectors.toList());
-    send(list, OrderableForCsv.class, this.csvService.getCsvName());
-  }
-
-  /**
-   * SftpService constructor.
-   *
+   * @param elements data to send.
+   * @param type     of the data.
+   * @param fileName name of the CSV file.
+   * @param <T>      type of the data.
    */
   public <T> void send(List<T> elements, Class<T> type, String fileName) {
     try {
       if (!CollectionUtils.isEmpty(elements)) {
-        File csv = csvService.createCsvFile(
-            elements, type, new File(fileName));
+        File csv = csvService.writeDataToCsvFile(elements, type, new File(fileName));
         sftpClient.putFileToSftp(Files.readAllBytes(csv.toPath()), fileName);
       }
     } catch (IOException e) {

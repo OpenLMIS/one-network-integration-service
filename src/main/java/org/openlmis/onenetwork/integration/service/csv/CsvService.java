@@ -13,7 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.service;
+package org.openlmis.onenetwork.integration.service.csv;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
@@ -22,8 +22,6 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -34,31 +32,27 @@ import org.springframework.stereotype.Service;
 public class CsvService {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
-  private static final String PREFIX_CSV_NAME = "products-";
-  private static final String SUFFIX_CSV_NAME = ".csv";
 
   /**
-   * Creates csv file.
+   * Fills the provided CSV file with the data of type {@code T}.
+   *
+   * @param elements to be written in the CSV file
+   * @param type     of the data being written
+   * @param csvFile  file to be filled with data.
+   * @return CSV file with data.
+   * @throws IOException serializing errors occurred
    */
-  public <T> File createCsvFile(List<T> elements, Class<T> type, File csvFile)
-      throws IOException {
+  public <T> File writeDataToCsvFile(List<T> elements, Class<T> type, File csvFile)
+          throws IOException {
     CsvMapper csvMapper = new CsvMapper();
     csvMapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
     CsvSchema csvSchema = csvMapper
-        .schemaFor(type)
-        .withHeader();
+            .schemaFor(type)
+            .withHeader();
     ObjectWriter csvWriter = csvMapper.writer(csvSchema.withLineSeparator("\n"));
     csvWriter.writeValue(csvFile, elements);
     logger.debug("Csv file created");
     return csvFile;
   }
 
-  /**
-   * Returns name of csv file.
-   */
-  public String getCsvName() {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd.HH.mm");
-    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-    return PREFIX_CSV_NAME + dateFormat.format(timestamp) + SUFFIX_CSV_NAME;
-  }
 }

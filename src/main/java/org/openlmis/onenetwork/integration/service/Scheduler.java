@@ -16,7 +16,6 @@
 package org.openlmis.onenetwork.integration.service;
 
 import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
-import org.openlmis.onenetwork.integration.sftp.SftpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +24,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Scheduler {
-  private final Logger logger = LoggerFactory.getLogger(getClass());
-  private SftpService sftpService;
-  private SchedulerConfiguration schedulerConfiguration;
+
+  private static final Logger logger = LoggerFactory.getLogger(Scheduler.class);
+
+  private final ProcessingService processingService;
+  private final SchedulerConfiguration schedulerConfiguration;
 
   @Autowired
   public Scheduler(SchedulerConfiguration schedulerConfiguration,
-                   SftpService sftpService) {
+                   ProcessingService processingService) {
     this.schedulerConfiguration = schedulerConfiguration;
-    this.sftpService = sftpService;
+    this.processingService = processingService;
   }
 
   /**
@@ -43,7 +44,7 @@ public class Scheduler {
   public void scheduleTask() {
     if (this.schedulerConfiguration.getEnable()) {
       logger.info("SCHEDULER - Running task using cron job.");
-      sftpService.send();
+      processingService.processQueueData();
     }
   }
 
