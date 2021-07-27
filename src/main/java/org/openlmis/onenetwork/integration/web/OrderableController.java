@@ -16,7 +16,7 @@
 package org.openlmis.onenetwork.integration.web;
 
 import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
-import org.openlmis.onenetwork.integration.domain.Orderable;
+import org.openlmis.onenetwork.integration.dto.Orderable;
 import org.openlmis.onenetwork.integration.service.OrderableQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

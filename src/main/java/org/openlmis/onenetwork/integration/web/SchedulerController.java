@@ -16,7 +16,7 @@
 package org.openlmis.onenetwork.integration.web;
 
 import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
-import org.openlmis.onenetwork.integration.domain.SchedulerStatus;
+import org.openlmis.onenetwork.integration.dto.SchedulerStatus;
 import org.openlmis.onenetwork.integration.service.ProcessingService;
 import org.openlmis.onenetwork.integration.service.Scheduler;
 import org.slf4j.Logger;

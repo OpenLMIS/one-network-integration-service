@@ -15,7 +15,7 @@
 
 package org.openlmis.onenetwork.integration.service;
 
-import org.openlmis.onenetwork.integration.domain.Orderable;
+import org.openlmis.onenetwork.integration.dto.Orderable;
 import org.springframework.stereotype.Service;
 
 @Service

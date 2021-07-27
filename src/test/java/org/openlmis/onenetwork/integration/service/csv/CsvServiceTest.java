@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.openlmis.onenetwork.integration.domain.OrderableForCsv;
+import org.openlmis.onenetwork.integration.dto.OrderableForCsv;
 
 public class CsvServiceTest {
 

@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.openlmis.onenetwork.integration.domain.Orderable;
-import org.openlmis.onenetwork.integration.domain.OrderableWrapper;
+import org.openlmis.onenetwork.integration.dto.Orderable;
+import org.openlmis.onenetwork.integration.dto.OrderableWrapper;
 import org.openlmis.onenetwork.integration.service.AuthService;
 import org.openlmis.onenetwork.integration.service.request.RequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;

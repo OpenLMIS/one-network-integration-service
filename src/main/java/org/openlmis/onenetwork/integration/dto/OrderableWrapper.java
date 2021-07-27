@@ -13,17 +13,23 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.domain;
+package org.openlmis.onenetwork.integration.dto;
 
-import lombok.Builder;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+@ToString
 @Getter
 @Setter
-@ToString
-@Builder
-public class SchedulerStatus {
-  private Boolean schedulerEnabled;
+public class OrderableWrapper {
+
+  private List<Orderable> content;
+
+  public OrderableWrapper() {
+    content = new ArrayList<>();
+  }
 }

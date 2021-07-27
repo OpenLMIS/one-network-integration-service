@@ -20,8 +20,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.openlmis.onenetwork.integration.domain.Orderable;
-import org.openlmis.onenetwork.integration.domain.OrderableForCsv;
+import org.openlmis.onenetwork.integration.dto.Orderable;
+import org.openlmis.onenetwork.integration.dto.OrderableForCsv;
 import org.openlmis.onenetwork.integration.service.referencedata.OrderableDataService;
 import org.openlmis.onenetwork.integration.sftp.SftpService;
 import org.springframework.beans.factory.annotation.Autowired;

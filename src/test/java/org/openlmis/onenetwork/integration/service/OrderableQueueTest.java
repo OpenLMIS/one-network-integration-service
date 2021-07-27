@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.openlmis.onenetwork.integration.domain.Orderable;
+import org.openlmis.onenetwork.integration.dto.Orderable;
 
 public class OrderableQueueTest {
 

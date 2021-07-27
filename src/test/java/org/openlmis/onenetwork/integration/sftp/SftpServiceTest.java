@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.openlmis.onenetwork.integration.domain.OrderableForCsv;
+import org.openlmis.onenetwork.integration.dto.OrderableForCsv;
 import org.openlmis.onenetwork.integration.service.csv.CsvService;
 
 @RunWith(MockitoJUnitRunner.class)
