@@ -62,11 +62,11 @@ public class ProcessingService {
   /**
    * Fetches the data from external services and send them to SFTP server.
    */
-  public void processCsvData() {
-    processOrderableData();
+  public void processFullCsvData() {
+    processFullOrderableData();
   }
 
-  private void processOrderableData() {
+  private void processFullOrderableData() {
     List<OrderableForCsv> objectsToCsvList = this.orderableService.getAllOrderables()
             .stream()
             .map(Orderable::toOrderableForCsv)

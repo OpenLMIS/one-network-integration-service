@@ -20,29 +20,23 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CsvService {
-
-  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   /**
    * Fills the provided CSV file with the data of type {@code T}.
    *
    * @param elements to be written in the CSV file
    * @param type     of the data being written
-   * @param csvFile  file to be filled with data.
    * @return CSV file with data.
    * @throws IOException serializing errors occurred
    */
-  public <T> File writeDataToCsvFile(List<T> elements, Class<T> type, File csvFile)
+  public <T> byte[] generateCsv(List<T> elements, Class<T> type)
           throws IOException {
     CsvMapper csvMapper = new CsvMapper();
     csvMapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
@@ -50,9 +44,7 @@ public class CsvService {
             .schemaFor(type)
             .withHeader();
     ObjectWriter csvWriter = csvMapper.writer(csvSchema.withLineSeparator("\n"));
-    csvWriter.writeValue(csvFile, elements);
-    logger.debug("Csv file created");
-    return csvFile;
+    return csvWriter.writeValueAsBytes(elements);
   }
 
 }

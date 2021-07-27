@@ -17,13 +17,11 @@ package org.openlmis.onenetwork.integration.service.csv;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -45,15 +43,11 @@ public class CsvServiceTest {
   @Test
   public void shouldWriteDataToCsvFile() throws Exception {
     List<OrderableForCsv> data = provideCsvData();
-    File tempFile = tempFolder.newFile("temp.csv");
 
-    csvService.writeDataToCsvFile(data, OrderableForCsv.class, tempFile);
+    byte[] fileByte = csvService.generateCsv(data, OrderableForCsv.class);
+    byte[] convertedContent = CONTENT.getBytes(StandardCharsets.UTF_8);
 
-    String fileContent = FileUtils.readFileToString(tempFile, StandardCharsets.UTF_8);
-
-    assertThat(fileContent).isNotBlank();
-    assertThat(CONTENT).isEqualTo(fileContent);
-
+    assertThat(fileByte).isEqualTo(convertedContent);
   }
 
   private List<OrderableForCsv> provideCsvData() {

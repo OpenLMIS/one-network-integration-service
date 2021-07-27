@@ -45,7 +45,7 @@ public class OrderableController {
    * @return {@link Orderable}
    */
   @PostMapping("/orderable")
-  public ResponseEntity<Orderable> orderableIntegration(
+  public ResponseEntity<Orderable> getUpdatedOrderable(
           @RequestBody Orderable orderable) {
     if (this.schedulerConfiguration.getEnable()) {
       orderableQueue.add(orderable);

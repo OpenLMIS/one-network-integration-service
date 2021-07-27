@@ -15,9 +15,7 @@
 
 package org.openlmis.onenetwork.integration.sftp;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 import org.openlmis.onenetwork.integration.service.csv.CsvService;
@@ -52,8 +50,7 @@ public class SftpService {
   public <T> void send(List<T> elements, Class<T> type, String fileName) {
     try {
       if (!CollectionUtils.isEmpty(elements)) {
-        File csv = csvService.writeDataToCsvFile(elements, type, new File(fileName));
-        sftpClient.putFileToSftp(Files.readAllBytes(csv.toPath()), fileName);
+        sftpClient.putFileToSftp(csvService.generateCsv(elements, type), fileName);
       }
     } catch (IOException e) {
       logger.error(e.getMessage(), e);

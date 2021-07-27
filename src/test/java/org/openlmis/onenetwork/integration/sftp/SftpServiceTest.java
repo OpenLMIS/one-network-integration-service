@@ -51,7 +51,7 @@ public class SftpServiceTest {
     sftpService.send(elements, OrderableForCsv.class, "dummy.csv");
 
     verify(sftpClient, times(0)).putFileToSftp(any(), any());
-    verify(csvService, times(0)).writeDataToCsvFile(any(), any(), any());
+    verify(csvService, times(0)).generateCsv(any(), any());
 
   }
 

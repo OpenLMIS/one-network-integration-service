@@ -66,7 +66,7 @@ public class SchedulerController {
   @PutMapping("/enable")
   public SchedulerStatus enableScheduler() {
     LOGGER.debug("Enabling the scheduler");
-    processingService.processCsvData();
+    processingService.processFullCsvData();
     this.schedulerConfiguration.setEnable(true);
     return SchedulerStatus.builder()
             .schedulerEnabled(schedulerConfiguration.getEnable())
