@@ -35,25 +35,26 @@ public class ProcessingService {
 
   private final OrderableDataService orderableService;
   private final SftpService sftpService;
-  private final OrderableQueue orderableQueue;
+  private final OrderableQueueService orderableQueueService;
 
   /**
    * ProcessingService constructor.
    */
   @Autowired
   public ProcessingService(OrderableDataService orderableService,
-                           OrderableQueue orderableQueue,
+                           OrderableQueueService orderableQueueService,
                            SftpService sftpService) {
     this.orderableService = orderableService;
     this.sftpService = sftpService;
-    this.orderableQueue = orderableQueue;
+    this.orderableQueueService = orderableQueueService;
   }
 
   /**
    * Gets the data from the queue and send them to SFTP server.
    */
   public void processQueueData() {
-    List<OrderableForCsv> list = orderableQueue.getList().stream()
+    List<OrderableForCsv> list = orderableQueueService.getList()
+            .stream()
             .map(Orderable::toOrderableForCsv)
             .collect(Collectors.toList());
     sftpService.send(list, OrderableForCsv.class, generateCsvName(ORDERABLE_PREFIX_CSV_NAME));

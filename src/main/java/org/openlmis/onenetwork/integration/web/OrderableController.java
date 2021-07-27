@@ -17,7 +17,7 @@ package org.openlmis.onenetwork.integration.web;
 
 import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
 import org.openlmis.onenetwork.integration.dto.Orderable;
-import org.openlmis.onenetwork.integration.service.OrderableQueue;
+import org.openlmis.onenetwork.integration.service.OrderableQueueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,13 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/integration")
 public class OrderableController {
 
-  private OrderableQueue orderableQueue;
+  private OrderableQueueService orderableQueueService;
   private SchedulerConfiguration schedulerConfiguration;
 
   @Autowired
-  public OrderableController(OrderableQueue orderableQueue,
+  public OrderableController(OrderableQueueService orderableQueueService,
                              SchedulerConfiguration schedulerConfiguration) {
-    this.orderableQueue = orderableQueue;
+    this.orderableQueueService = orderableQueueService;
     this.schedulerConfiguration = schedulerConfiguration;
   }
 
@@ -48,7 +48,7 @@ public class OrderableController {
   public ResponseEntity<Orderable> getUpdatedOrderable(
           @RequestBody Orderable orderable) {
     if (this.schedulerConfiguration.getEnable()) {
-      orderableQueue.add(orderable);
+      orderableQueueService.offer(orderable);
     }
     return ResponseEntity.ok()
             .body(orderable);

@@ -19,9 +19,9 @@ import org.openlmis.onenetwork.integration.dto.Orderable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderableQueue extends BasicQueue<Orderable> {
+public class OrderableQueueService extends BasicQueue<Orderable> {
 
-  public OrderableQueue() {
+  public OrderableQueueService() {
     super();
   }
 }

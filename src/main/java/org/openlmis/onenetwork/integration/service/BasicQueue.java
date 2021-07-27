@@ -15,50 +15,69 @@
 
 package org.openlmis.onenetwork.integration.service;
 
+import java.util.AbstractQueue;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Queue;
-import org.apache.commons.collections4.QueueUtils;
-import org.apache.commons.collections4.queue.CircularFifoQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class BasicQueue<T> {
-  private Queue queue;
+public abstract class BasicQueue<T> extends AbstractQueue<T> {
+
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
+  private ConcurrentLinkedQueue<T> queue;
+
   public BasicQueue() {
-    this.queue = QueueUtils.synchronizedQueue(new CircularFifoQueue());
+    this.queue = new ConcurrentLinkedQueue<>();
+  }
+
+  @Override
+  public Iterator<T> iterator() {
+    return queue.iterator();
+  }
+
+  @Override
+  public int size() {
+    return queue.size();
+  }
+
+  @Override
+  public boolean offer(T t) {
+    synchronized (queue) {
+      if (t == null) {
+        return false;
+      }
+      return queue.offer(t);
+    }
+  }
+
+  @Override
+  public T poll() {
+    return queue.poll();
+  }
+
+  @Override
+  public T peek() {
+    synchronized (queue) {
+      return queue.peek();
+    }
   }
 
   /**
-   * Get list from queue.
+   * Gets list from queue, and then clears this list.
    *
    * @return {@link List} of {@link T} Returns list.
    */
   public List<T> getList() {
     synchronized (queue) {
-      logger.debug("Getting list from queue");
-      List<T> result = new ArrayList<>();
-      Iterator i = queue.iterator();
-
-      while (i.hasNext()) {
-        result.add((T) i.next());
-      }
+      logger.debug("Getting list from queue and clearing list");
+      List<T> result = new ArrayList<>(queue);
       queue.clear();
 
       return result;
-    }
-  }
-
-  /**
-   * Add element to queue.
-   */
-  public void add(T element) {
-    synchronized (queue) {
-      logger.debug("Adding to the queue");
-      queue.add(element);
     }
   }
 }

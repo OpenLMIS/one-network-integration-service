@@ -17,17 +17,19 @@ package org.openlmis.onenetwork.integration.service;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
 import java.util.List;
-
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.openlmis.onenetwork.integration.dto.Orderable;
 
-public class OrderableQueueTest {
+public class OrderableQueueServiceTest {
 
-  @InjectMocks
-  OrderableQueue orderableQueue = new OrderableQueue();
+  OrderableQueueService orderableQueueService;
+
+  @Before
+  public void setUp() {
+    orderableQueueService = new OrderableQueueService();
+  }
 
   private Orderable orderable = new Orderable.Builder()
           .withProductCode("testCode")
@@ -36,17 +38,28 @@ public class OrderableQueueTest {
 
   @Test
   public void shouldReturnEmptyList() {
-    assertEquals(0, orderableQueue.getList().size());
+    orderableQueueService.offer(null);
+    assertEquals(0, orderableQueueService.getList().size());
   }
 
   @Test
   public void shouldAddOrderableToListAndReturnList() {
-    orderableQueue.add(orderable);
-    List result = orderableQueue.getList();
-    Orderable resultOrderable = (Orderable) result.get(0);
+    orderableQueueService.offer(orderable);
+    List resultList = orderableQueueService.getList();
+    Orderable resultOrderable = (Orderable) resultList.get(0);
 
-    assertEquals(Arrays.asList(orderable), result);
+    assertEquals(orderable, resultOrderable);
     assertEquals("testCode", resultOrderable.getProductCode());
     assertEquals("testName", resultOrderable.getFullProductName());
+  }
+
+  @Test
+  public void shouldClearQueue() {
+    orderableQueueService.offer(orderable);
+    List resultList = orderableQueueService.getList();
+    List secondResultList = orderableQueueService.getList();
+
+    assertEquals(1, resultList.size());
+    assertEquals(0, secondResultList.size());
   }
 }
