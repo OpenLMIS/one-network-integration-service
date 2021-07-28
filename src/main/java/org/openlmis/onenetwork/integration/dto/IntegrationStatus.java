@@ -13,15 +13,17 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.service;
+package org.openlmis.onenetwork.integration.dto;
 
-import org.openlmis.onenetwork.integration.dto.Orderable;
-import org.springframework.stereotype.Service;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Service
-public class OrderableQueueService extends BasicQueue<Orderable> {
-
-  public OrderableQueueService() {
-    super();
-  }
+@Getter
+@Setter
+@ToString
+@Builder
+public class IntegrationStatus {
+  private Boolean enabled;
 }

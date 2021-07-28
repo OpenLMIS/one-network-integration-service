@@ -13,27 +13,28 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.service;
+package org.openlmis.onenetwork.integration.scheduler;
 
-import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
+import org.openlmis.onenetwork.integration.configuration.IntegrationConfiguration;
+import org.openlmis.onenetwork.integration.service.ProcessingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class Scheduler {
+@Component
+public class ScheduledTasks {
 
-  private static final Logger logger = LoggerFactory.getLogger(Scheduler.class);
+  private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
 
   private final ProcessingService processingService;
-  private final SchedulerConfiguration schedulerConfiguration;
+  private final IntegrationConfiguration integrationConfiguration;
 
   @Autowired
-  public Scheduler(SchedulerConfiguration schedulerConfiguration,
-                   ProcessingService processingService) {
-    this.schedulerConfiguration = schedulerConfiguration;
+  public ScheduledTasks(IntegrationConfiguration integrationConfiguration,
+                        ProcessingService processingService) {
+    this.integrationConfiguration = integrationConfiguration;
     this.processingService = processingService;
   }
 
@@ -41,8 +42,8 @@ public class Scheduler {
    * This scheduler will run tasks to send CSV files to the SFTP server.
    */
   @Scheduled(cron = "${onenetwork.integration.cron}", zone = "${time.zoneId}")
-  public void scheduleTask() {
-    if (this.schedulerConfiguration.getEnable()) {
+  public void runTask() {
+    if (this.integrationConfiguration.getEnable()) {
       logger.info("SCHEDULER - Running task using cron job.");
       processingService.processQueueData();
     }

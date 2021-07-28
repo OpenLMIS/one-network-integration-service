@@ -15,79 +15,75 @@
 
 package org.openlmis.onenetwork.integration.web;
 
-import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
-import org.openlmis.onenetwork.integration.dto.SchedulerStatus;
+import org.openlmis.onenetwork.integration.configuration.IntegrationConfiguration;
+import org.openlmis.onenetwork.integration.dto.IntegrationStatus;
+import org.openlmis.onenetwork.integration.scheduler.ScheduledTasks;
 import org.openlmis.onenetwork.integration.service.ProcessingService;
-import org.openlmis.onenetwork.integration.service.Scheduler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Controller used for displaying and setting scheduler information.
+ * Controller used for displaying and setting integration information.
  */
 @RestController
-@RequestMapping("/api/scheduler")
-public class SchedulerController {
+@RequestMapping("/api/integration")
+public class IntegrationController {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationController.class);
 
-  private final SchedulerConfiguration schedulerConfiguration;
+  private final IntegrationConfiguration integrationConfiguration;
   private final ProcessingService processingService;
 
   @Autowired
-  public SchedulerController(SchedulerConfiguration schedulerConfiguration,
-                             ProcessingService processingService) {
-    this.schedulerConfiguration = schedulerConfiguration;
+  public IntegrationController(IntegrationConfiguration integrationConfiguration,
+                               ProcessingService processingService) {
+    this.integrationConfiguration = integrationConfiguration;
     this.processingService = processingService;
   }
 
   /**
-   * Returns the {@link Scheduler} status.
+   * Returns the {@link ScheduledTasks} status.
    *
-   * @return {@link SchedulerStatus} info.
+   * @return {@link IntegrationStatus} info.
    */
   @RequestMapping("/status")
-  public SchedulerStatus schedulerStatus() {
+  public IntegrationStatus getIntegrationStatus() {
     LOGGER.debug("Getting scheduler status info");
-    return SchedulerStatus.builder()
-            .schedulerEnabled(schedulerConfiguration.getEnable())
+    return IntegrationStatus.builder()
+            .enabled(integrationConfiguration.getEnable())
             .build();
   }
 
   /**
-   * Enables the schedule.
-   *
-   * @return {@link SchedulerStatus} info.
+   * Enables integration and sends full data.
    */
   @PutMapping("/enable")
-  public SchedulerStatus enableScheduler() {
-    LOGGER.debug("Enabling the scheduler");
+  @ResponseStatus(HttpStatus.OK)
+  public void enableIntegration() {
+    LOGGER.debug("Sending full data");
     processingService.processFullCsvData();
-    this.schedulerConfiguration.setEnable(true);
-    return SchedulerStatus.builder()
-            .schedulerEnabled(schedulerConfiguration.getEnable())
-            .build();
+
+    LOGGER.debug("Enabling the scheduler");
+    this.integrationConfiguration.setEnable(true);
   }
 
   /**
-   * Disables the schedule.
-   *
-   * @return {@link SchedulerStatus} info.
+   * Disables integration and sends unprocessed data.
    */
   @PutMapping("/disable")
-  public SchedulerStatus disableScheduler() {
+  @ResponseStatus(HttpStatus.OK)
+  public void disableIntegration() {
     LOGGER.debug("Disabling the scheduler");
-    this.schedulerConfiguration.setEnable(false);
+    this.integrationConfiguration.setEnable(false);
 
-    LOGGER.debug("Sending collected data while disabled scheduler");
+    LOGGER.debug("Sending unprocessed data");
     processingService.processQueueData();
-
-    return SchedulerStatus.builder()
-            .schedulerEnabled(schedulerConfiguration.getEnable())
-            .build();
   }
 }

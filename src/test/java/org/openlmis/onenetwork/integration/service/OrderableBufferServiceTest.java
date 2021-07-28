@@ -22,13 +22,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.onenetwork.integration.dto.Orderable;
 
-public class OrderableQueueServiceTest {
+public class OrderableBufferServiceTest {
 
-  OrderableQueueService orderableQueueService;
+  OrderableBufferService orderableBufferService;
 
   @Before
   public void setUp() {
-    orderableQueueService = new OrderableQueueService();
+    orderableBufferService = new OrderableBufferService();
   }
 
   private Orderable orderable = new Orderable.Builder()
@@ -38,14 +38,14 @@ public class OrderableQueueServiceTest {
 
   @Test
   public void shouldReturnEmptyList() {
-    orderableQueueService.offer(null);
-    assertEquals(0, orderableQueueService.getList().size());
+    orderableBufferService.add(null);
+    assertEquals(0, orderableBufferService.getAllAndClear().size());
   }
 
   @Test
   public void shouldAddOrderableToListAndReturnList() {
-    orderableQueueService.offer(orderable);
-    List resultList = orderableQueueService.getList();
+    orderableBufferService.add(orderable);
+    List resultList = orderableBufferService.getAllAndClear();
     Orderable resultOrderable = (Orderable) resultList.get(0);
 
     assertEquals(orderable, resultOrderable);
@@ -55,9 +55,9 @@ public class OrderableQueueServiceTest {
 
   @Test
   public void shouldClearQueue() {
-    orderableQueueService.offer(orderable);
-    List resultList = orderableQueueService.getList();
-    List secondResultList = orderableQueueService.getList();
+    orderableBufferService.add(orderable);
+    List resultList = orderableBufferService.getAllAndClear();
+    List secondResultList = orderableBufferService.getAllAndClear();
 
     assertEquals(1, resultList.size());
     assertEquals(0, secondResultList.size());

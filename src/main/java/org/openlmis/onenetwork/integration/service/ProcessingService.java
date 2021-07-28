@@ -33,27 +33,27 @@ public class ProcessingService {
   private static final String SUFFIX_CSV_NAME = ".csv";
   private static final String ORDERABLE_PREFIX_CSV_NAME = "products-";
 
-  private final OrderableDataService orderableService;
+  private final OrderableDataService orderableDataService;
   private final SftpService sftpService;
-  private final OrderableQueueService orderableQueueService;
+  private final OrderableBufferService orderableBufferService;
 
   /**
    * ProcessingService constructor.
    */
   @Autowired
-  public ProcessingService(OrderableDataService orderableService,
-                           OrderableQueueService orderableQueueService,
+  public ProcessingService(OrderableDataService orderableDataService,
+                           OrderableBufferService orderableBufferService,
                            SftpService sftpService) {
-    this.orderableService = orderableService;
+    this.orderableDataService = orderableDataService;
+    this.orderableBufferService = orderableBufferService;
     this.sftpService = sftpService;
-    this.orderableQueueService = orderableQueueService;
   }
 
   /**
    * Gets the data from the queue and send them to SFTP server.
    */
   public void processQueueData() {
-    List<OrderableForCsv> list = orderableQueueService.getList()
+    List<OrderableForCsv> list = orderableBufferService.getAllAndClear()
             .stream()
             .map(Orderable::toOrderableForCsv)
             .collect(Collectors.toList());
@@ -68,7 +68,7 @@ public class ProcessingService {
   }
 
   private void processFullOrderableData() {
-    List<OrderableForCsv> objectsToCsvList = this.orderableService.getAllOrderables()
+    List<OrderableForCsv> objectsToCsvList = this.orderableDataService.getAllOrderables()
             .stream()
             .map(Orderable::toOrderableForCsv)
             .collect(Collectors.toList());

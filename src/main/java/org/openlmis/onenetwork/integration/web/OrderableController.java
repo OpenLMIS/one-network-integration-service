@@ -15,42 +15,40 @@
 
 package org.openlmis.onenetwork.integration.web;
 
-import org.openlmis.onenetwork.integration.configuration.SchedulerConfiguration;
+import org.openlmis.onenetwork.integration.configuration.IntegrationConfiguration;
 import org.openlmis.onenetwork.integration.dto.Orderable;
-import org.openlmis.onenetwork.integration.service.OrderableQueueService;
+import org.openlmis.onenetwork.integration.service.OrderableBufferService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/integration")
 public class OrderableController {
 
-  private OrderableQueueService orderableQueueService;
-  private SchedulerConfiguration schedulerConfiguration;
+  private OrderableBufferService orderableBufferService;
+  private IntegrationConfiguration integrationConfiguration;
 
   @Autowired
-  public OrderableController(OrderableQueueService orderableQueueService,
-                             SchedulerConfiguration schedulerConfiguration) {
-    this.orderableQueueService = orderableQueueService;
-    this.schedulerConfiguration = schedulerConfiguration;
+  public OrderableController(OrderableBufferService orderableBufferService,
+                             IntegrationConfiguration integrationConfiguration) {
+    this.orderableBufferService = orderableBufferService;
+    this.integrationConfiguration = integrationConfiguration;
   }
 
   /**
-   * Receives product related data and writes them to the buffer.
-   *
-   * @return {@link Orderable}
+   * Receives product related data and send them to the buffer.
    */
   @PostMapping("/orderable")
-  public ResponseEntity<Orderable> getUpdatedOrderable(
+  @ResponseStatus(HttpStatus.OK)
+  public void sendOrderableToBuffer(
           @RequestBody Orderable orderable) {
-    if (this.schedulerConfiguration.getEnable()) {
-      orderableQueueService.offer(orderable);
+    if (this.integrationConfiguration.getEnable()) {
+      orderableBufferService.add(orderable);
     }
-    return ResponseEntity.ok()
-            .body(orderable);
   }
 }

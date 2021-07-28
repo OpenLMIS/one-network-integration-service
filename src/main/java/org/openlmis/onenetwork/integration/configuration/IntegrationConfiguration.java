@@ -19,8 +19,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "onenetwork.scheduler")
-public class SchedulerConfiguration {
+@ConfigurationProperties(prefix = "onenetwork.integration")
+public class IntegrationConfiguration {
 
   public Boolean getEnable() {
     return enable;
