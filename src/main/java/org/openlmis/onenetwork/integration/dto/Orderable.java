@@ -25,19 +25,16 @@ public class Orderable {
 
   private final String managingEntName;
 
-  private final String managingOrgName;
-
   private final String productCode;
 
   private final String fullProductName;
 
-  private final String displayName;
+  private final Boolean active;
 
   private Orderable(String productCode, String fullProductName) {
     this.productCode = productCode;
     this.fullProductName = fullProductName;
-    this.displayName = productCode + "-" + fullProductName;
-    this.managingOrgName = "OpenLMIS Demo";
+    this.active = true;
     this.managingEntName = "OpenLMIS Demo";
   }
 
@@ -48,10 +45,9 @@ public class Orderable {
   public OrderableForCsv toOrderableForCsv() {
     return new OrderableForCsv(
             this.managingEntName,
-            this.managingOrgName,
             this.productCode,
-            this.displayName,
-            this.fullProductName);
+            this.fullProductName,
+            this.active);
   }
 
   @JsonPOJOBuilder

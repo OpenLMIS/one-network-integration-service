@@ -22,10 +22,9 @@ import lombok.RequiredArgsConstructor;
 
 @JsonPropertyOrder({
         "ManagingEntName",
-        "ManagingOrgName",
         "ItemName",
-        "DisplayName",
-        "Description"
+        "Description",
+        "Active"
 })
 @Getter
 @RequiredArgsConstructor
@@ -33,15 +32,12 @@ public class OrderableForCsv {
   @JsonProperty("ManagingEntName")
   private final String managingEntName;
 
-  @JsonProperty("ManagingOrgName")
-  private final String managingOrgName;
-
   @JsonProperty("ItemName")
   private final String productCode;
 
-  @JsonProperty("DisplayName")
-  private final String displayName;
-
   @JsonProperty("Description")
   private final String fullProductName;
+
+  @JsonProperty("Active")
+  private final Boolean active;
 }

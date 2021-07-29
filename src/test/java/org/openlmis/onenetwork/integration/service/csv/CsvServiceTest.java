@@ -31,9 +31,9 @@ public class CsvServiceTest {
 
   private static final String MANAGING_NAME = "OpenLMIS Demo";
   private static final String CONTENT =
-          "ManagingEntName,ManagingOrgName,ItemName,DisplayName,Description\n"
-          + "\"OpenLMIS Demo\",\"OpenLMIS Demo\",TEST001,TEST001-TEST001,TEST001\n"
-          + "\"OpenLMIS Demo\",\"OpenLMIS Demo\",TEST002,TEST002-TEST002,TEST002\n";
+          "ManagingEntName,ItemName,Description,Active\n"
+          + "\"OpenLMIS Demo\",TEST001,TEST001,true\n"
+          + "\"OpenLMIS Demo\",TEST002,TEST002,true\n";
 
   @Rule
   public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -54,17 +54,15 @@ public class CsvServiceTest {
     return Stream.of(
             new OrderableForCsv(
                     MANAGING_NAME,
-                    MANAGING_NAME,
                     "TEST001",
-                    "TEST001-TEST001",
-                    "TEST001"
+                    "TEST001",
+                    true
             ),
             new OrderableForCsv(
                     MANAGING_NAME,
-                    MANAGING_NAME,
                     "TEST002",
-                    "TEST002-TEST002",
-                    "TEST002"
+                    "TEST002",
+                    true
             )
     ).collect(Collectors.toList());
   }

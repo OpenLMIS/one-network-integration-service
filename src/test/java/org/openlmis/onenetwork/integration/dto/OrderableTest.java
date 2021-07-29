@@ -13,7 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.domain;
+package org.openlmis.onenetwork.integration.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,8 +21,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import org.openlmis.onenetwork.integration.dto.Orderable;
-import org.openlmis.onenetwork.integration.dto.OrderableForCsv;
 
 public class OrderableTest {
 
@@ -51,10 +49,8 @@ public class OrderableTest {
 
     assertThat(orderable).isNotNull();
     assertThat(orderable.getManagingEntName()).isEqualTo(MANAGING_NAME);
-    assertThat(orderable.getManagingOrgName()).isEqualTo(MANAGING_NAME);
     assertThat(orderable.getProductCode()).isEqualTo("0268-8000");
     assertThat(orderable.getFullProductName()).isEqualTo("10 TREE MIX");
-    assertThat(orderable.getDisplayName()).isEqualTo("0268-8000-10 TREE MIX");
   }
 
   @Test
@@ -64,10 +60,9 @@ public class OrderableTest {
     OrderableForCsv orderableForCsv = orderable.toOrderableForCsv();
     assertThat(orderableForCsv).isNotNull();
     assertThat(orderableForCsv.getManagingEntName()).isEqualTo(MANAGING_NAME);
-    assertThat(orderableForCsv.getManagingOrgName()).isEqualTo(MANAGING_NAME);
     assertThat(orderableForCsv.getProductCode()).isEqualTo("0268-8000");
     assertThat(orderableForCsv.getFullProductName()).isEqualTo("10 TREE MIX");
-    assertThat(orderableForCsv.getDisplayName()).isEqualTo("0268-8000-10 TREE MIX");
+    assertThat(orderableForCsv.getActive()).isEqualTo(true);
   }
 
 }
