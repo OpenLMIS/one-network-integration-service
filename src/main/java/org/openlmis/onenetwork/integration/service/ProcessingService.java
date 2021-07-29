@@ -50,9 +50,9 @@ public class ProcessingService {
   }
 
   /**
-   * Gets the data from the queue and send them to SFTP server.
+   * Gets the data from the buffer and send them to SFTP server.
    */
-  public void processQueueData() {
+  public void processBufferedData() {
     List<OrderableForCsv> list = orderableBufferService.getAllAndClear()
             .stream()
             .map(Orderable::toOrderableForCsv)
@@ -68,7 +68,7 @@ public class ProcessingService {
   }
 
   private void processFullOrderableData() {
-    List<OrderableForCsv> objectsToCsvList = this.orderableDataService.getAllOrderables()
+    List<OrderableForCsv> objectsToCsvList = orderableDataService.getAllOrderables()
             .stream()
             .map(Orderable::toOrderableForCsv)
             .collect(Collectors.toList());

@@ -47,7 +47,7 @@ public class OrderableController {
   @ResponseStatus(HttpStatus.OK)
   public void sendOrderableToBuffer(
           @RequestBody Orderable orderable) {
-    if (this.integrationConfiguration.getEnable()) {
+    if (integrationConfiguration.getEnable()) {
       orderableBufferService.add(orderable);
     }
   }

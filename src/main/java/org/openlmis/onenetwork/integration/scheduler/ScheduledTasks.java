@@ -45,7 +45,7 @@ public class ScheduledTasks {
   public void runTask() {
     if (this.integrationConfiguration.getEnable()) {
       logger.info("SCHEDULER - Running task using cron job.");
-      processingService.processQueueData();
+      processingService.processBufferedData();
     }
   }
 

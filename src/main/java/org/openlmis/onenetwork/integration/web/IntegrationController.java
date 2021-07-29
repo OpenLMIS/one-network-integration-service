@@ -71,7 +71,7 @@ public class IntegrationController {
     processingService.processFullCsvData();
 
     LOGGER.debug("Enabling the scheduler");
-    this.integrationConfiguration.setEnable(true);
+    integrationConfiguration.setEnable(true);
   }
 
   /**
@@ -81,9 +81,9 @@ public class IntegrationController {
   @ResponseStatus(HttpStatus.OK)
   public void disableIntegration() {
     LOGGER.debug("Disabling the scheduler");
-    this.integrationConfiguration.setEnable(false);
+    integrationConfiguration.setEnable(false);
 
     LOGGER.debug("Sending unprocessed data");
-    processingService.processQueueData();
+    processingService.processBufferedData();
   }
 }
