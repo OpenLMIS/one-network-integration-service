@@ -29,7 +29,6 @@ import org.openlmis.onenetwork.integration.dto.OrderableForCsv;
 
 public class CsvServiceTest {
 
-  private static final String MANAGING_NAME = "OpenLMIS Demo";
   private static final String CONTENT =
           "ManagingEntName,ItemName,Description,Active\n"
           + "\"OpenLMIS Demo\",TEST001,TEST001,true\n"
@@ -53,13 +52,11 @@ public class CsvServiceTest {
   private List<OrderableForCsv> provideCsvData() {
     return Stream.of(
             new OrderableForCsv(
-                    MANAGING_NAME,
                     "TEST001",
                     "TEST001",
                     true
             ),
             new OrderableForCsv(
-                    MANAGING_NAME,
                     "TEST002",
                     "TEST002",
                     true

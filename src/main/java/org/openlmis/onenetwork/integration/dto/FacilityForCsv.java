@@ -22,24 +22,49 @@ import lombok.RequiredArgsConstructor;
 
 @JsonPropertyOrder({
         "ManagingEntName",
-        "ItemName",
-        "Description",
+        "ManagingOrgName",
+        "SiteName",
+        "TimeZoneId",
+        "Street1",
+        "City",
+        "State",
+        "Zip",
+        "Country",
         "Active"
 })
 @Getter
 @RequiredArgsConstructor
-public class OrderableForCsv {
+public class FacilityForCsv {
 
+  private static final String UNKNOWN = "Unknown";
   private static final String MANAGING_NAME = "OpenLMIS Demo";
 
   @JsonProperty("ManagingEntName")
   private final String managingEntName = MANAGING_NAME;
 
-  @JsonProperty("ItemName")
-  private final String productCode;
+  @JsonProperty("ManagingOrgName")
+  private final String managingOrgName = MANAGING_NAME;
 
-  @JsonProperty("Description")
-  private final String fullProductName;
+  @JsonProperty("SiteName")
+  private final String siteName;
+
+  @JsonProperty("TimeZoneId")
+  private final String timeZoneId;
+
+  @JsonProperty("Street1")
+  private final String street1 = UNKNOWN;
+
+  @JsonProperty("City")
+  private final String city = UNKNOWN;
+
+  @JsonProperty("State")
+  private final String state = UNKNOWN;
+
+  @JsonProperty("Zip")
+  private final String zip = UNKNOWN;
+
+  @JsonProperty("Country")
+  private final String country;
 
   @JsonProperty("Active")
   private final Boolean active;

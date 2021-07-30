@@ -15,32 +15,21 @@
 
 package org.openlmis.onenetwork.integration.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@JsonPropertyOrder({
-        "ManagingEntName",
-        "ItemName",
-        "Description",
-        "Active"
-})
+@ToString
 @Getter
-@RequiredArgsConstructor
-public class OrderableForCsv {
+@Setter
+public class FacilityWrapper {
 
-  private static final String MANAGING_NAME = "OpenLMIS Demo";
+  private List<Facility> content;
 
-  @JsonProperty("ManagingEntName")
-  private final String managingEntName = MANAGING_NAME;
-
-  @JsonProperty("ItemName")
-  private final String productCode;
-
-  @JsonProperty("Description")
-  private final String fullProductName;
-
-  @JsonProperty("Active")
-  private final Boolean active;
+  public FacilityWrapper() {
+    content = new ArrayList<>();
+  }
 }

@@ -20,8 +20,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.openlmis.onenetwork.integration.dto.Facility;
+import org.openlmis.onenetwork.integration.dto.FacilityForCsv;
 import org.openlmis.onenetwork.integration.dto.Orderable;
 import org.openlmis.onenetwork.integration.dto.OrderableForCsv;
+import org.openlmis.onenetwork.integration.service.referencedata.FacilityDataService;
 import org.openlmis.onenetwork.integration.service.referencedata.OrderableDataService;
 import org.openlmis.onenetwork.integration.sftp.SftpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +35,10 @@ public class ProcessingService {
 
   private static final String SUFFIX_CSV_NAME = ".csv";
   private static final String ORDERABLE_PREFIX_CSV_NAME = "products-";
+  private static final String FACILITY_PREFIX_CSV_NAME = "facilities-";
 
   private final OrderableDataService orderableDataService;
+  private final FacilityDataService facilityDataService;
   private final SftpService sftpService;
   private final OrderableBufferService orderableBufferService;
 
@@ -42,9 +47,11 @@ public class ProcessingService {
    */
   @Autowired
   public ProcessingService(OrderableDataService orderableDataService,
+                           FacilityDataService facilityDataService,
                            OrderableBufferService orderableBufferService,
                            SftpService sftpService) {
     this.orderableDataService = orderableDataService;
+    this.facilityDataService = facilityDataService;
     this.orderableBufferService = orderableBufferService;
     this.sftpService = sftpService;
   }
@@ -65,6 +72,7 @@ public class ProcessingService {
    */
   public void processFullCsvData() {
     processFullOrderableData();
+    processFullFacilityData();
   }
 
   private void processFullOrderableData() {
@@ -74,6 +82,15 @@ public class ProcessingService {
             .collect(Collectors.toList());
     sftpService.send(objectsToCsvList, OrderableForCsv.class,
             generateCsvName(ORDERABLE_PREFIX_CSV_NAME));
+  }
+
+  private void processFullFacilityData() {
+    List<FacilityForCsv> objectsToCsvList = facilityDataService.getAllFacilities()
+            .stream()
+            .map(Facility::toFacilityForCsv)
+            .collect(Collectors.toList());
+    sftpService.send(objectsToCsvList, FacilityForCsv.class,
+            generateCsvName(FACILITY_PREFIX_CSV_NAME));
   }
 
   /**

@@ -20,51 +20,66 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Getter;
 
 @Getter
-@JsonDeserialize(builder = Orderable.Builder.class)
-public class Orderable {
+@JsonDeserialize(builder = Facility.Builder.class)
+public class Facility {
 
-  private final String productCode;
+  private final String code;
 
-  private final String fullProductName;
+  private final String name;
+
+  private final String siteName;
 
   private final Boolean active;
 
-  private Orderable(String productCode, String fullProductName) {
-    this.productCode = productCode;
-    this.fullProductName = fullProductName;
-    this.active = true;
+  private final String timeZoneId;
+
+  private final String country;
+
+  private Facility(String code, String name, Boolean active) {
+    this.code = code;
+    this.name = name;
+    this.country = "";
+    this.timeZoneId = "";
+    this.active = active;
+    this.siteName = name + "-" + code;
   }
 
   /**
-   * Converts the {@link Orderable} to {@link OrderableForCsv} object.
-   * @return {@link OrderableForCsv}
+   * Converts the {@link Facility} to {@link FacilityForCsv} object.
+   * @return {@link FacilityForCsv}
    */
-  public OrderableForCsv toOrderableForCsv() {
-    return new OrderableForCsv(
-            this.productCode,
-            this.fullProductName,
+  public FacilityForCsv toFacilityForCsv() {
+    return new FacilityForCsv(
+            this.siteName,
+            this.timeZoneId,
+            this.country,
             this.active);
   }
 
   @JsonPOJOBuilder
   public static class Builder {
 
-    String productCode;
-    String fullProductName;
+    String code;
+    String name;
+    Boolean active;
 
-    public Builder withProductCode(String productCode) {
-      this.productCode = productCode;
+    public Facility.Builder withCode(String code) {
+      this.code = code;
       return this;
     }
 
-    public Builder withFullProductName(String fullProductName) {
-      this.fullProductName = fullProductName;
+    public Facility.Builder withName(String name) {
+      this.name = name;
       return this;
     }
 
-    public Orderable build() {
-      return new Orderable(productCode, fullProductName);
+    public  Facility.Builder withActive(Boolean active) {
+      this.active = active;
+      return this;
+    }
+
+    public Facility build() {
+      return new Facility(code, name, active);
     }
   }
-
 }

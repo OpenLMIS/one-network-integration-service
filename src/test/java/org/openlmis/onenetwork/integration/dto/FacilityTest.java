@@ -22,17 +22,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 
-public class OrderableTest {
+public class FacilityTest {
 
   private static final String MANAGING_NAME = "OpenLMIS Demo";
 
   private static final String JSON = "{\n"
           + "    \"id\" : \"c7298536-4cd9-46f3-bf9f-3690473a26fe\",\n"
-          + "    \"productCode\" : \"0268-8000\",\n"
-          + "    \"fullProductName\" : \"10 TREE MIX\",\n"
-          + "    \"netContent\" : 53,\n"
-          + "    \"packRoundingThreshold\" : 4,\n"
-          + "    \"roundToZero\" : true\n"
+          + "    \"name\" : \"Aafin Primary Health Care\",\n"
+          + "    \"code\" : \"G108\",\n"
+          + "    \"active\" : true,\n"
+          + "    \"enabled\" : true\n"
           + "    }";
 
   private ObjectMapper objectMapper;
@@ -44,24 +43,24 @@ public class OrderableTest {
   }
 
   @Test
-  public void shouldMapFromJsonObjectToOrderable() throws Exception {
-    Orderable orderable = objectMapper.readValue(JSON, Orderable.class);
+  public void shouldMapFromJsonObjectToFacility() throws Exception {
+    Facility facility = objectMapper.readValue(JSON, Facility.class);
 
-    assertThat(orderable).isNotNull();
-    assertThat(orderable.getProductCode()).isEqualTo("0268-8000");
-    assertThat(orderable.getFullProductName()).isEqualTo("10 TREE MIX");
+    assertThat(facility).isNotNull();
+    assertThat(facility.getCode()).isEqualTo("G108");
+    assertThat(facility.getName()).isEqualTo("Aafin Primary Health Care");
+    assertThat(facility.getActive()).isEqualTo(true);
   }
 
   @Test
-  public void shouldConvertToOrderableForCsv() throws Exception {
-    Orderable orderable = objectMapper.readValue(JSON, Orderable.class);
+  public void shouldConvertToFacilityForCsv() throws Exception {
+    Facility facility = objectMapper.readValue(JSON, Facility.class);
 
-    OrderableForCsv orderableForCsv = orderable.toOrderableForCsv();
-    assertThat(orderableForCsv).isNotNull();
-    assertThat(orderableForCsv.getManagingEntName()).isEqualTo(MANAGING_NAME);
-    assertThat(orderableForCsv.getProductCode()).isEqualTo("0268-8000");
-    assertThat(orderableForCsv.getFullProductName()).isEqualTo("10 TREE MIX");
-    assertThat(orderableForCsv.getActive()).isEqualTo(true);
+    FacilityForCsv facilityForCsv = facility.toFacilityForCsv();
+    assertThat(facilityForCsv).isNotNull();
+    assertThat(facilityForCsv.getManagingEntName()).isEqualTo(MANAGING_NAME);
+    assertThat(facilityForCsv.getManagingOrgName()).isEqualTo(MANAGING_NAME);
+    assertThat(facilityForCsv.getSiteName()).isEqualTo("Aafin Primary Health Care-G108");
+    assertThat(facilityForCsv.getActive()).isEqualTo(true);
   }
-
 }
