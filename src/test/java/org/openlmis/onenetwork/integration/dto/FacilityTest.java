@@ -55,8 +55,10 @@ public class FacilityTest {
   @Test
   public void shouldConvertToFacilityForCsv() throws Exception {
     Facility facility = objectMapper.readValue(JSON, Facility.class);
+    String timeZoneId = "mw";
+    String country = "MW";
 
-    FacilityForCsv facilityForCsv = facility.toFacilityForCsv();
+    FacilityForCsv facilityForCsv = facility.toFacilityForCsv(timeZoneId, country);
     assertThat(facilityForCsv).isNotNull();
     assertThat(facilityForCsv.getManagingEntName()).isEqualTo(MANAGING_NAME);
     assertThat(facilityForCsv.getManagingOrgName()).isEqualTo(MANAGING_NAME);

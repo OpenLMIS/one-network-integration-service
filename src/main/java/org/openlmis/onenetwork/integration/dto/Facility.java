@@ -17,6 +17,7 @@ package org.openlmis.onenetwork.integration.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import lombok.Getter;
 
 @Getter
@@ -31,15 +32,9 @@ public class Facility {
 
   private final Boolean active;
 
-  private final String timeZoneId;
-
-  private final String country;
-
   private Facility(String code, String name, Boolean active) {
     this.code = code;
     this.name = name;
-    this.country = "";
-    this.timeZoneId = "";
     this.active = active;
     this.siteName = name + "-" + code;
   }
@@ -48,12 +43,12 @@ public class Facility {
    * Converts the {@link Facility} to {@link FacilityForCsv} object.
    * @return {@link FacilityForCsv}
    */
-  public FacilityForCsv toFacilityForCsv() {
+  public FacilityForCsv toFacilityForCsv(String timeZoneId, String country) {
     return new FacilityForCsv(
-            this.siteName,
-            this.timeZoneId,
-            this.country,
-            this.active);
+        this.siteName,
+        timeZoneId,
+        country,
+        this.active);
   }
 
   @JsonPOJOBuilder
