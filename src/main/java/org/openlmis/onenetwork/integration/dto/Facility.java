@@ -46,6 +46,7 @@ public class Facility {
   public FacilityForCsv toFacilityForCsv(String timeZoneId, String country) {
     return new FacilityForCsv(
         this.siteName,
+        this.name,
         timeZoneId,
         country,
         this.active);

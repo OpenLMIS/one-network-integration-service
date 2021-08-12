@@ -27,11 +27,14 @@ public class Orderable {
 
   private final String fullProductName;
 
+  private final String displayName;
+
   private final Boolean active;
 
   private Orderable(String productCode, String fullProductName) {
     this.productCode = productCode;
     this.fullProductName = fullProductName;
+    this.displayName = fullProductName + " - " + productCode;
     this.active = true;
   }
 
@@ -43,6 +46,7 @@ public class Orderable {
     return new OrderableForCsv(
             this.productCode,
             this.fullProductName,
+            this.displayName,
             this.active);
   }
 

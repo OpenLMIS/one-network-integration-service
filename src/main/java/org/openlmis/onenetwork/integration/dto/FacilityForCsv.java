@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
         "ManagingEntName",
         "ManagingOrgName",
         "SiteName",
+        "Description",
         "TimeZoneId",
         "Street1",
         "City",
@@ -47,6 +48,9 @@ public class FacilityForCsv {
 
   @JsonProperty("SiteName")
   private final String siteName;
+
+  @JsonProperty("Description")
+  private final String name;
 
   @JsonProperty("TimeZoneId")
   private final String timeZoneId;

@@ -30,9 +30,9 @@ import org.openlmis.onenetwork.integration.dto.OrderableForCsv;
 public class CsvServiceTest {
 
   private static final String CONTENT =
-          "ManagingEntName,ItemName,Description,Active\n"
-          + "\"OpenLMIS Demo\",TEST001,TEST001,true\n"
-          + "\"OpenLMIS Demo\",TEST002,TEST002,true\n";
+          "ManagingEntName,ManagingOrgName,ItemName,DisplayName,Description,Active\n"
+          + "\"OpenLMIS Demo\",\"OpenLMIS Demo\",TEST001,\"TEST001 - TEST001\",TEST001,true\n"
+          + "\"OpenLMIS Demo\",\"OpenLMIS Demo\",TEST002,\"TEST002 - TEST002\",TEST002,true\n";
 
   @Rule
   public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -54,14 +54,15 @@ public class CsvServiceTest {
             new OrderableForCsv(
                     "TEST001",
                     "TEST001",
+                    "TEST001 - TEST001",
                     true
             ),
             new OrderableForCsv(
                     "TEST002",
                     "TEST002",
+                    "TEST002 - TEST002",
                     true
             )
     ).collect(Collectors.toList());
   }
-
 }
