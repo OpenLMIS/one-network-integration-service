@@ -63,6 +63,6 @@ public class FacilityTest {
     assertThat(facilityForCsv.getManagingEntName()).isEqualTo(MANAGING_NAME);
     assertThat(facilityForCsv.getManagingOrgName()).isEqualTo(MANAGING_NAME);
     assertThat(facilityForCsv.getSiteName()).isEqualTo("Aafin Primary Health Care-G108");
-    assertThat(facilityForCsv.getActive()).isEqualTo(true);
+    assertThat(facilityForCsv.getActive()).isEqualTo("1");
   }
 }

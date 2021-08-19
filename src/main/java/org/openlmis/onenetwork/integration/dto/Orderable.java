@@ -43,11 +43,12 @@ public class Orderable {
    * @return {@link OrderableForCsv}
    */
   public OrderableForCsv toOrderableForCsv() {
+    String active = this.active ? "1" : "0";
     return new OrderableForCsv(
             this.productCode,
             this.fullProductName,
             this.displayName,
-            this.active);
+            active);
   }
 
   @JsonPOJOBuilder

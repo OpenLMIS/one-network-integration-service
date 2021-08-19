@@ -62,7 +62,7 @@ public class OrderableTest {
     assertThat(orderableForCsv.getProductCode()).isEqualTo("0268-8000");
     assertThat(orderableForCsv.getFullProductName()).isEqualTo("10 TREE MIX");
     assertThat(orderableForCsv.getDisplayName()).isEqualTo("10 TREE MIX - 0268-8000");
-    assertThat(orderableForCsv.getActive()).isEqualTo(true);
+    assertThat(orderableForCsv.getActive()).isEqualTo("1");
   }
 
 }

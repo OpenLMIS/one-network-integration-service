@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @JsonPropertyOrder({
-        "ManagingEntName",
+        "#ManagingEntName",
         "ManagingOrgName",
         "SiteName",
         "Description",
@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
         "State",
         "Zip",
         "Country",
+        "IsDC",
         "Active"
 })
 @Getter
@@ -39,8 +40,9 @@ public class FacilityForCsv {
 
   private static final String UNKNOWN = "Unknown";
   private static final String MANAGING_NAME = "OpenLMIS Demo";
+  private static final String VALUE = "1";
 
-  @JsonProperty("ManagingEntName")
+  @JsonProperty("#ManagingEntName")
   private final String managingEntName = MANAGING_NAME;
 
   @JsonProperty("ManagingOrgName")
@@ -70,6 +72,9 @@ public class FacilityForCsv {
   @JsonProperty("Country")
   private final String country;
 
+  @JsonProperty("IsDC")
+  private final String isDc = VALUE;
+
   @JsonProperty("Active")
-  private final Boolean active;
+  private final String active;
 }

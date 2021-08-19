@@ -44,12 +44,13 @@ public class Facility {
    * @return {@link FacilityForCsv}
    */
   public FacilityForCsv toFacilityForCsv(String timeZoneId, String country) {
+    String active = this.active ? "1" : "0";
     return new FacilityForCsv(
         this.siteName,
         this.name,
         timeZoneId,
         country,
-        this.active);
+        active);
   }
 
   @JsonPOJOBuilder

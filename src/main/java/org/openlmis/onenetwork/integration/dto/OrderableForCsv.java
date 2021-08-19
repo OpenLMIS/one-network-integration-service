@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @JsonPropertyOrder({
-        "ManagingEntName",
+        "#ManagingEntName",
         "ManagingOrgName",
         "ItemName",
         "DisplayName",
@@ -34,7 +34,7 @@ public class OrderableForCsv {
 
   private static final String MANAGING_NAME = "OpenLMIS Demo";
 
-  @JsonProperty("ManagingEntName")
+  @JsonProperty("#ManagingEntName")
   private final String managingEntName = MANAGING_NAME;
 
   @JsonProperty("ManagingOrgName")
@@ -50,5 +50,5 @@ public class OrderableForCsv {
   private final String displayName;
 
   @JsonProperty("Active")
-  private final Boolean active;
+  private final String active;
 }
