@@ -37,7 +37,7 @@ public class ProcessingService {
   private static final String ORDERABLE_PREFIX_CSV_NAME = "products-";
   private static final String FACILITY_PREFIX_CSV_NAME = "facilities-";
 
-  @Value("${time.zoneId}")
+  @Value("${time.zoneIdOneNetwork}")
   private String timeZoneId;
 
   @Value("${country}")
