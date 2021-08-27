@@ -17,6 +17,7 @@ package org.openlmis.onenetwork.integration.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import java.util.UUID;
 
 import lombok.Getter;
 
@@ -32,11 +33,14 @@ public class Facility {
 
   private final Boolean active;
 
-  private Facility(String code, String name, Boolean active) {
+  private final UUID id;
+
+  private Facility(String code, String name, Boolean active, UUID id) {
     this.code = code;
     this.name = name;
     this.active = active;
     this.siteName = name + "-" + code;
+    this.id = id;
   }
 
   /**
@@ -59,6 +63,7 @@ public class Facility {
     String code;
     String name;
     Boolean active;
+    UUID id;
 
     public Facility.Builder withCode(String code) {
       this.code = code;
@@ -75,8 +80,13 @@ public class Facility {
       return this;
     }
 
+    public  Facility.Builder withId(UUID id) {
+      this.id = id;
+      return this;
+    }
+
     public Facility build() {
-      return new Facility(code, name, active);
+      return new Facility(code, name, active, id);
     }
   }
 }

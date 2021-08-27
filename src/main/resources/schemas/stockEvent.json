@@ -1,0 +1,34 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "StockEvent",
+  "description": "A single stockEvent",
+  "properties": {
+    "id": {
+      "type": "string",
+      "title": "id"
+    },
+    "facilityId": {
+      "type": "string",
+      "title": "facilityId"
+    },
+    "programId": {
+      "type": "string",
+      "title": "programId"
+    },
+    "lineItems": {
+      "type": "array",
+      "title": "Line items of stock event, each of a different orderable.",
+      "items": {
+        "type": "object",
+        "title": "Stock event line item",
+        "$ref": "stockEventLineItemDto.json"
+      }
+    }
+  },
+  "required": [
+    "facilityId",
+    "programId",
+    "lineItems"
+  ]
+}

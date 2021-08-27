@@ -15,13 +15,14 @@
 
 package org.openlmis.onenetwork.integration.service.referencedata;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.openlmis.onenetwork.integration.dto.Facility;
-import org.openlmis.onenetwork.integration.dto.FacilityWrapper;
+import org.openlmis.onenetwork.integration.dto.StockCardSummariesWrapper;
+import org.openlmis.onenetwork.integration.dto.referencedata.StockCardSummaries;
 import org.openlmis.onenetwork.integration.service.AuthService;
 import org.openlmis.onenetwork.integration.service.request.RequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,68 +34,48 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class FacilityDataService {
+public class StockCardSummariesService {
 
   @Value("${service.url}")
   private String referencedataUrl;
 
-  private static final String SERVICE_URL = "/api/facilities/";
+  private static final String SERVICE_URL = "/api/v2/stockCardSummaries";
 
   private final AuthService authService;
   private final RestTemplate restTemplate;
 
   @Autowired
-  public FacilityDataService(AuthService authService,
-                              RestTemplate restTemplate) {
-    this.restTemplate = restTemplate;
+  public StockCardSummariesService(AuthService authService, RestTemplate restTemplate) {
     this.authService = authService;
+    this.restTemplate = restTemplate;
   }
 
   /**
-   * Fetch all facilities from referencedata service.
+   * Fetch all stockCardSummary from referencedata service for specified .
    *
-   * @return List of {@link Facility} or empty list if
+   * @return List of {@link StockCardSummaries} or empty list if
    *     referencedata service returned empty content.
    */
-  public List<Facility> getAllFacilities() {
+  public List<StockCardSummaries> getStockCardSummaries(UUID facilityId, UUID programId) {
     HttpHeaders headers = new HttpHeaders();
-    String url = referencedataUrl + SERVICE_URL;
+    String url = referencedataUrl + SERVICE_URL
+        + "?facilityId=" + facilityId
+        + "&nonEmptyOnly=true"
+        + "&programId=" + programId
+        + "&asOfDate=" + LocalDate.now();
     headers.setBearerAuth(authService.obtainAccessToken());
 
-    Optional<FacilityWrapper> facilityWrapperOptional = Optional.ofNullable(restTemplate.exchange(
-            RequestHelper.createUri(url),
-            HttpMethod.GET,
-            new HttpEntity<>(headers),
-            FacilityWrapper.class)
-            .getBody());
-
+    Optional<StockCardSummariesWrapper> facilityWrapperOptional = Optional
+        .ofNullable(restTemplate.exchange(RequestHelper.createUri(url),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                StockCardSummariesWrapper.class)
+                .getBody());
+    System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~" + facilityWrapperOptional.toString());
     if (facilityWrapperOptional.isPresent()) {
+      System.out.println("~~~~~~~~~~~~~~~~~~~~~~facilityWrapperOptional.isPresent()");
       return facilityWrapperOptional.get().getContent();
     }
     return Collections.emptyList();
-  }
-
-  /**
-   * Fetch facility with specified id from referencedata service.
-   *
-   * @return {@link Facility} or empty facility if
-   *     referencedata service returned empty content.
-   */
-  public Facility findWithId(UUID facilityId) {
-    HttpHeaders headers = new HttpHeaders();
-    String url = referencedataUrl + SERVICE_URL + "/" + facilityId;
-    headers.setBearerAuth(authService.obtainAccessToken());
-
-    Optional<Facility> facilityOptional = Optional.ofNullable(restTemplate.exchange(
-            RequestHelper.createUri(url),
-            HttpMethod.GET,
-            new HttpEntity<>(headers),
-            Facility.class)
-            .getBody());
-
-    if (facilityOptional.isPresent()) {
-      return facilityOptional.get();
-    }
-    return new Facility.Builder().build();
   }
 }

@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "description": "Line item of a stock event",
+  "properties": {
+    "orderableId": {
+      "type": "string",
+      "title": "Orderable id",
+      "description": "Indicates which orderable this line item is for."
+    },
+    "lotId": {
+      "type": "string",
+      "title": "Lot id",
+      "description": "Indicates which lot this line item is for."
+    },
+    "sourceId": {
+      "type": "string",
+      "description": "Indicates where orderables are received from. Can not be present along with destination id."
+    },
+    "destinationId": {
+      "type": "string",
+      "description": "During the 'ISSUE' event, destinationId indicates where orderables are issued to. Can not be present along with source id."
+    },
+    "quantity": {
+      "type": "integer",
+      "description": "Indicates quantity of movement. Not allowed to be negative"
+    },
+    "reasonId": {
+      "type": "string",
+      "description": "Allowed for 'ISSUE', 'RECEIVE' and 'ADJUSTMENT' events, not allowed for 'PHYSICAL INVENTORY' events."
+    },
+    "occurredDate": {
+      "type": "string",
+      "format": "date",
+      "description": "The date when this event occurred"
+    },
+    "extraData": {
+      "type": "object",
+      "description": "Can be used to save additional data for line item.",
+      "title": "extraData"
+    }
+  },
+  "required": ["orderableId", "quantity"]
+}

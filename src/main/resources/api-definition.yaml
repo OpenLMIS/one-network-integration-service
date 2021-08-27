@@ -23,6 +23,7 @@ schemas:
 
   - version: !include schemas/version.json
   - orderable: !include schemas/orderable.json
+  - stockEvent: !include schemas/stockEvent.json
 
 traits:
   - secured:
@@ -167,6 +168,14 @@ resourceTypes:
     displayName: createUpdateOrderable
     post:
       description: Receives product related data and writes them to the buffer
+      responses:
+        200:
+          body:
+            application/json:
+  /integration/stockEvent:
+    displayName: createStockEvent
+    post:
+      description: Receives stockEvent related data and send them to the buffer
       responses:
         200:
           body:

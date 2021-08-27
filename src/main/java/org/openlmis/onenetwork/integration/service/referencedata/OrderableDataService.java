@@ -18,6 +18,7 @@ package org.openlmis.onenetwork.integration.service.referencedata;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.openlmis.onenetwork.integration.dto.Orderable;
 import org.openlmis.onenetwork.integration.dto.OrderableWrapper;
@@ -71,5 +72,29 @@ public class OrderableDataService {
       return orderableWrapperOptional.get().getContent();
     }
     return Collections.emptyList();
+  }
+
+  /**
+   * Fetch orderable by id from referencedata service.
+   *
+   * @return {@link Orderable} or empty orderable if
+   *     referencedata service returned empty content.
+   */
+  public Orderable findWithId(UUID orderableId) {
+    HttpHeaders headers = new HttpHeaders();
+    String url = referencedataUrl + SERVICE_URL + "/" + orderableId;
+    headers.setBearerAuth(authService.obtainAccessToken());
+
+    Optional<Orderable> orderableOptional = Optional.ofNullable(restTemplate.exchange(
+            RequestHelper.createUri(url),
+            HttpMethod.GET,
+            new HttpEntity<>(headers),
+            Orderable.class)
+            .getBody());
+
+    if (orderableOptional.isPresent()) {
+      return orderableOptional.get();
+    }
+    return new Orderable.Builder().build();
   }
 }
