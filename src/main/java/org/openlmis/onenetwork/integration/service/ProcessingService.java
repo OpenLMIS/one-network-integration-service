@@ -19,16 +19,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.openlmis.onenetwork.integration.dto.Facility;
 import org.openlmis.onenetwork.integration.dto.FacilityForCsv;
 import org.openlmis.onenetwork.integration.dto.Orderable;
 import org.openlmis.onenetwork.integration.dto.OrderableForCsv;
-import org.openlmis.onenetwork.integration.dto.SohForCsv;
-import org.openlmis.onenetwork.integration.dto.StockEvent;
 import org.openlmis.onenetwork.integration.dto.StockOnHand;
+import org.openlmis.onenetwork.integration.dto.StockOnHandForCsv;
 import org.openlmis.onenetwork.integration.dto.referencedata.StockCardSummaries;
+import org.openlmis.onenetwork.integration.dto.referencedata.StockEvent;
 import org.openlmis.onenetwork.integration.service.referencedata.FacilityDataService;
 import org.openlmis.onenetwork.integration.service.referencedata.OrderableDataService;
 import org.openlmis.onenetwork.integration.service.referencedata.StockCardSummariesService;
@@ -126,8 +127,8 @@ public class ProcessingService {
    */
   public void processSohBufferedData() {
     List<StockEvent> stockEventList = stockEventBufferService.getAllAndClear();
-    List<SohForCsv> list = fetchSohData(stockEventList);
-    sftpService.send(list, SohForCsv.class, generateCsvName(SOH_PREFIX_CSV_NAME));
+    List<StockOnHandForCsv> list = fetchSohData(stockEventList);
+    sftpService.send(list, StockOnHandForCsv.class, generateCsvName(SOH_PREFIX_CSV_NAME));
   }
 
   /**
@@ -142,11 +143,11 @@ public class ProcessingService {
   }
 
   /**
-   * Fetches {@link SohForCsv} list from {@link StockEvent} list.
+   * Fetches {@link StockOnHandForCsv} list from {@link StockEvent} list.
    *
-   * @return list of {@link SohForCsv}.
+   * @return list of {@link StockOnHandForCsv}.
    */
-  public List<SohForCsv> fetchSohData(List<StockEvent> stockEventList) {
+  private List<StockOnHandForCsv> fetchSohData(List<StockEvent> stockEventList) {
     List<StockOnHand> sohList = new ArrayList<>();
     for (StockEvent stockEvent : stockEventList) {
       Facility facilityClass = facilityDataService.findWithId(stockEvent.getFacilityId());
@@ -154,15 +155,22 @@ public class ProcessingService {
       String facilityCode = facilityClass.getCode();
       List<StockCardSummaries> stockCardSummariesList = stockCardSummariesService
           .getStockCardSummaries(stockEvent.getFacilityId(), stockEvent.getProgramId());
+      List<UUID> orderableIdList = stockEvent.getLineItems()
+          .stream()
+          .map(li -> li.getOrderableId())
+          .collect(Collectors.toList());
       for (StockCardSummaries stockCardSummaries : stockCardSummariesList) {
-        Orderable orderable = orderableDataService
-            .findWithId(stockCardSummaries.getOrderable().getId());
-        String product = orderable.getFullProductName();
-        String productCode = orderable.getProductCode();
-        String soh = stockCardSummaries.getStockOnHand().toString();
-        StockOnHand stockOnHand = new StockOnHand(product,
-            productCode, facility, facilityCode, soh);
-        sohList.add(stockOnHand);
+        if (orderableIdList.contains(stockCardSummaries.getOrderable().getId())) {
+          Orderable orderable = orderableDataService
+              .findWithId(stockCardSummaries.getOrderable().getId());
+
+          String product = orderable.getFullProductName();
+          String productCode = orderable.getProductCode();
+          String soh = stockCardSummaries.getStockOnHand().toString();
+          StockOnHand stockOnHand = new StockOnHand(product,
+              productCode, facility, facilityCode, soh);
+          sohList.add(stockOnHand);
+        }
       }
     }
     return sohList.stream().map(StockOnHand::toSohForCsv).collect(Collectors.toList());

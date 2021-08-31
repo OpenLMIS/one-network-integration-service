@@ -16,7 +16,7 @@
 package org.openlmis.onenetwork.integration.web;
 
 import org.openlmis.onenetwork.integration.configuration.IntegrationConfiguration;
-import org.openlmis.onenetwork.integration.dto.StockEvent;
+import org.openlmis.onenetwork.integration.dto.referencedata.StockEvent;
 import org.openlmis.onenetwork.integration.service.StockEventBufferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

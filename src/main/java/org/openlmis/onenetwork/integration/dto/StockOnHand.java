@@ -35,10 +35,10 @@ public class StockOnHand {
   }
 
   /**
-   * Converts the {@link StockOnHand} to {@link SohForCsv} object.
-   * @return {@link SohForCsv}
+   * Converts the {@link StockOnHand} to {@link StockOnHandForCsv} object.
+   * @return {@link StockOnHandForCsv}
    */
-  public SohForCsv toSohForCsv() {
-    return new SohForCsv(this.itemName, this.siteName, this.onHand);
+  public StockOnHandForCsv toSohForCsv() {
+    return new StockOnHandForCsv(this.itemName, this.siteName, this.onHand);
   }
 }

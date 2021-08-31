@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,6 +51,7 @@ public class FacilityTest {
     assertThat(facility.getCode()).isEqualTo("G108");
     assertThat(facility.getName()).isEqualTo("Aafin Primary Health Care");
     assertThat(facility.getActive()).isEqualTo(true);
+    assertThat(facility.getId()).isEqualTo(UUID.fromString("c7298536-4cd9-46f3-bf9f-3690473a26fe"));
   }
 
   @Test

@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.openlmis.onenetwork.integration.dto.StockCardSummariesWrapper;
 import org.openlmis.onenetwork.integration.dto.referencedata.StockCardSummaries;
+import org.openlmis.onenetwork.integration.dto.referencedata.StockCardSummariesWrapper;
 import org.openlmis.onenetwork.integration.service.AuthService;
 import org.openlmis.onenetwork.integration.service.request.RequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +71,7 @@ public class StockCardSummariesService {
                 new HttpEntity<>(headers),
                 StockCardSummariesWrapper.class)
                 .getBody());
-    System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~" + facilityWrapperOptional.toString());
     if (facilityWrapperOptional.isPresent()) {
-      System.out.println("~~~~~~~~~~~~~~~~~~~~~~facilityWrapperOptional.isPresent()");
       return facilityWrapperOptional.get().getContent();
     }
     return Collections.emptyList();

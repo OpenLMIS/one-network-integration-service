@@ -17,6 +17,7 @@ package org.openlmis.onenetwork.integration.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @JsonPropertyOrder({
@@ -59,8 +60,9 @@ import lombok.RequiredArgsConstructor;
     "Lot Item Enterprise Name",
     "LoItem Name"
 })
+@Getter
 @RequiredArgsConstructor
-public class SohForCsv {
+public class StockOnHandForCsv {
 
   private static final String MANAGING_NAME = "OpenLMIS Demo";
   private static final String EMPTY = "";

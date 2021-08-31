@@ -32,7 +32,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openlmis.onenetwork.integration.dto.Facility;
-import org.openlmis.onenetwork.integration.dto.FacilityWrapper;
+import org.openlmis.onenetwork.integration.dto.referencedata.FacilityWrapper;
 import org.openlmis.onenetwork.integration.service.AuthService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;

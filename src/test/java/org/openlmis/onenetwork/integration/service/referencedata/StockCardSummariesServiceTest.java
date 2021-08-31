@@ -13,21 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.dto;
+package org.openlmis.onenetwork.integration.service.referencedata;
 
-import java.util.ArrayList;
-import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import org.openlmis.onenetwork.integration.dto.referencedata.StockCardSummaries;
-
-@Getter
-@Setter
-public class StockCardSummariesWrapper {
-
-  private List<StockCardSummaries> content;
-
-  public StockCardSummariesWrapper() {
-    content = new ArrayList<>();
-  }
+public class StockCardSummariesServiceTest {
 }

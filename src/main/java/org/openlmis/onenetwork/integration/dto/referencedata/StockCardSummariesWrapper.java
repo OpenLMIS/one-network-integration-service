@@ -13,43 +13,21 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.service;
+package org.openlmis.onenetwork.integration.dto.referencedata;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.openlmis.onenetwork.integration.dto.referencedata.StockEvent;
-import org.springframework.stereotype.Service;
+import lombok.Getter;
+import lombok.Setter;
+import org.openlmis.onenetwork.integration.dto.referencedata.StockCardSummaries;
 
-@Service
-public class StockEventBufferService implements BufferService<StockEvent> {
+@Getter
+@Setter
+public class StockCardSummariesWrapper {
 
-  private final List<StockEvent> buffer;
+  private List<StockCardSummaries> content;
 
-  public StockEventBufferService() {
-    this.buffer = new ArrayList<>();
-  }
-
-  @Override
-  public boolean add(StockEvent stockEvent) {
-    synchronized (buffer) {
-      if (stockEvent == null) {
-        return false;
-      }
-      return buffer.add(stockEvent);
-    }
-  }
-
-  /**
-   * Gets elements from buffer, and then clears this buffer.
-   *
-   * @return {@link List} of {@link StockEvent} list.
-   */
-  @Override
-  public List<StockEvent> getAllAndClear() {
-    synchronized (buffer) {
-      List<StockEvent> result = new ArrayList<>(buffer);
-      buffer.clear();
-      return result;
-    }
+  public StockCardSummariesWrapper() {
+    content = new ArrayList<>();
   }
 }

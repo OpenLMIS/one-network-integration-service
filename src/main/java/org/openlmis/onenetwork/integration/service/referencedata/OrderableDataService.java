@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.openlmis.onenetwork.integration.dto.Orderable;
-import org.openlmis.onenetwork.integration.dto.OrderableWrapper;
+import org.openlmis.onenetwork.integration.dto.referencedata.OrderableWrapper;
 import org.openlmis.onenetwork.integration.service.AuthService;
 import org.openlmis.onenetwork.integration.service.request.RequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;

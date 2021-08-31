@@ -13,7 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.onenetwork.integration.dto;
+package org.openlmis.onenetwork.integration.dto.referencedata;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -26,9 +26,9 @@ import lombok.Getter;
 @JsonDeserialize(builder = StockEvent.Builder.class)
 public class StockEvent {
 
-  private UUID facilityId;
-  private UUID programId;
-  private List<StockEventLineItemDto> lineItems;
+  private final UUID facilityId;
+  private final UUID programId;
+  private final List<StockEventLineItemDto> lineItems;
 
   private StockEvent(UUID facilityId, UUID programId, List<StockEventLineItemDto> lineItems) {
     this.facilityId = facilityId;
