@@ -91,19 +91,19 @@ public class StockOnHandForCsv {
   @JsonProperty("* Site Enterprise Name")
   private final String siteEnterpriseName = MANAGING_NAME;
 
-  @JsonProperty("Site Organization Name")
+  @JsonProperty("* Site Organization Name")
   private final String siteOrganizationName = MANAGING_NAME;
 
-  @JsonProperty("Site Name")
+  @JsonProperty("* Site Name")
   private final String siteName;
 
   @JsonProperty("Site Alias")
   private final String siteAlias = EMPTY;
 
-  @JsonProperty("Quantity Unit Of Measure (100-PACK, 10000GALLONTANKCAR, 1000BTU ...)")
+  @JsonProperty("* Quantity Unit Of Measure (100-PACK, 10000GALLONTANKCAR, 1000BTU ...)")
   private final String quantityUnitOfMeasure = EACH;
 
-  @JsonProperty("Ordering UOM (AM, AST, ASY ...)")
+  @JsonProperty("* Ordering UOM (AM, AST, ASY ...)")
   private final String orderingUom = EACH;
 
   @JsonProperty("Inventory Status (AVAILABLE, BAD, DESTROYED ...)")

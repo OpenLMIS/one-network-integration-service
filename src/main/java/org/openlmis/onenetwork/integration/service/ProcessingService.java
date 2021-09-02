@@ -15,6 +15,7 @@
 
 package org.openlmis.onenetwork.integration.service;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.openlmis.onenetwork.integration.dto.Consumption;
+import org.openlmis.onenetwork.integration.dto.ConsumptionForCsv;
 import org.openlmis.onenetwork.integration.dto.Facility;
 import org.openlmis.onenetwork.integration.dto.FacilityForCsv;
 import org.openlmis.onenetwork.integration.dto.Orderable;
@@ -30,6 +33,7 @@ import org.openlmis.onenetwork.integration.dto.StockOnHand;
 import org.openlmis.onenetwork.integration.dto.StockOnHandForCsv;
 import org.openlmis.onenetwork.integration.dto.referencedata.StockCardSummaries;
 import org.openlmis.onenetwork.integration.dto.referencedata.StockEvent;
+import org.openlmis.onenetwork.integration.dto.referencedata.StockEventLineItemDto;
 import org.openlmis.onenetwork.integration.service.referencedata.FacilityDataService;
 import org.openlmis.onenetwork.integration.service.referencedata.OrderableDataService;
 import org.openlmis.onenetwork.integration.service.referencedata.StockCardSummariesService;
@@ -45,6 +49,7 @@ public class ProcessingService {
   private static final String ORDERABLE_PREFIX_CSV_NAME = "products-";
   private static final String FACILITY_PREFIX_CSV_NAME = "facilities-";
   private static final String SOH_PREFIX_CSV_NAME = "SOH-";
+  private static final String CONSUMPTION_PREFIX_CSV_NAME = "consumption-";
 
   @Value("${time.zoneIdOneNetwork}")
   private String timeZoneId;
@@ -128,7 +133,11 @@ public class ProcessingService {
   public void processSohBufferedData() {
     List<StockEvent> stockEventList = stockEventBufferService.getAllAndClear();
     List<StockOnHandForCsv> list = fetchSohData(stockEventList);
+    List<ConsumptionForCsv> consumptionList = fetchConsumptionData(stockEventList);
     sftpService.send(list, StockOnHandForCsv.class, generateCsvName(SOH_PREFIX_CSV_NAME));
+    sftpService.send(consumptionList,
+        ConsumptionForCsv.class,
+        generateCsvName(CONSUMPTION_PREFIX_CSV_NAME));
   }
 
   /**
@@ -166,7 +175,8 @@ public class ProcessingService {
 
           String product = orderable.getFullProductName();
           String productCode = orderable.getProductCode();
-          String soh = stockCardSummaries.getStockOnHand().toString();
+          DecimalFormat formatter = new DecimalFormat("###,###.###");
+          String soh = formatter.format((double) stockCardSummaries.getStockOnHand());
           StockOnHand stockOnHand = new StockOnHand(product,
               productCode, facility, facilityCode, soh);
           sohList.add(stockOnHand);
@@ -174,5 +184,37 @@ public class ProcessingService {
       }
     }
     return sohList.stream().map(StockOnHand::toSohForCsv).collect(Collectors.toList());
+  }
+
+  /**
+   * Fetches {@link ConsumptionForCsv} list from {@link StockEvent} list.
+   *
+   * @return list of {@link ConsumptionForCsv}.
+   */
+  private List<ConsumptionForCsv> fetchConsumptionData(List<StockEvent> stockEventList) {
+    List<Consumption> consumptionList = new ArrayList<>();
+
+    for (StockEvent stockEvent : stockEventList) {
+      Facility facilityClass = facilityDataService.findWithId(stockEvent.getFacilityId());
+      String facility = facilityClass.getName();
+      String facilityCode = facilityClass.getCode();
+      for (StockEventLineItemDto lineItemDto : stockEvent.getLineItems()) {
+        Orderable orderable = orderableDataService
+             .findWithId(lineItemDto.getOrderableId());
+        String product = orderable.getFullProductName();
+        String productCode = orderable.getProductCode();
+        String consumptionValue = lineItemDto.getQuantity().toString();
+        String lastUpdate = lineItemDto.getOccurredDate().toString();
+
+        Consumption consumption = new Consumption(product,
+            productCode, facility, facilityCode, consumptionValue, lastUpdate);
+        consumptionList.add(consumption);
+      }
+    }
+
+    return consumptionList
+        .stream()
+        .map(Consumption::toConsumptionForCsv)
+        .collect(Collectors.toList());
   }
 }
