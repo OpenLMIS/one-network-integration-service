@@ -31,4 +31,8 @@ public class StockEventLineItemDto {
   private UUID reasonId;
   private UUID sourceId;
   private UUID destinationId;
+
+  public boolean hasDestinationId() {
+    return this.destinationId != null;
+  }
 }

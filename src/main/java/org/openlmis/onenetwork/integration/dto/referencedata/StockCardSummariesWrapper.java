@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.openlmis.onenetwork.integration.dto.referencedata.StockCardSummaries;
 
 @Getter
 @Setter

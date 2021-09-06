@@ -87,7 +87,7 @@ public class ProcessingService {
    */
   public void processBufferedData() {
     processOrderableBufferedData();
-    processSohBufferedData();
+    processStockEventBufferedData();
   }
 
   /**
@@ -130,7 +130,7 @@ public class ProcessingService {
   /**
    * Fetches stockOnHand data from buffer and send them to SFTP server.
    */
-  public void processSohBufferedData() {
+  public void processStockEventBufferedData() {
     List<StockEvent> stockEventList = stockEventBufferService.getAllAndClear();
     List<StockOnHandForCsv> list = fetchSohData(stockEventList);
     List<ConsumptionForCsv> consumptionList = fetchConsumptionData(stockEventList);
@@ -203,7 +203,8 @@ public class ProcessingService {
              .findWithId(lineItemDto.getOrderableId());
         String product = orderable.getFullProductName();
         String productCode = orderable.getProductCode();
-        String consumptionValue = lineItemDto.getQuantity().toString();
+        String consumptionValue = lineItemDto.hasDestinationId()
+            ? String.valueOf(lineItemDto.getQuantity() * -1) : lineItemDto.getQuantity().toString();
         String lastUpdate = lineItemDto.getOccurredDate().toString();
 
         Consumption consumption = new Consumption(product,
