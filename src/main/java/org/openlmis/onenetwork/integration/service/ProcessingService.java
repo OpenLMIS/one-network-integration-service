@@ -208,14 +208,14 @@ public class ProcessingService {
              .findWithId(lineItemDto.getOrderableId());
         String product = orderable.getFullProductName();
         String productCode = orderable.getProductCode();
-        String consumptionValue;
+        String consumptionValue = "";
         if (lineItemDto.hasReasonId()) {
           ReasonType reasonType = stockCardLineItemReasonDataService
               .findWithId(lineItemDto.getReasonId()).getReasonType();
-          consumptionValue = reasonType == ReasonType.CREDIT
+          consumptionValue = reasonType == ReasonType.DEBIT
               ? String.valueOf(lineItemDto.getQuantity() * -1)
               : lineItemDto.getQuantity().toString();
-        } else {
+        } else if (!lineItemDto.hasReasonId()) {
           consumptionValue = lineItemDto.hasDestinationId()
               ? String.valueOf(lineItemDto.getQuantity() * -1)
               : lineItemDto.getQuantity().toString();
