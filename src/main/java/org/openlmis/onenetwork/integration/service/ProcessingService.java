@@ -31,11 +31,13 @@ import org.openlmis.onenetwork.integration.dto.Orderable;
 import org.openlmis.onenetwork.integration.dto.OrderableForCsv;
 import org.openlmis.onenetwork.integration.dto.StockOnHand;
 import org.openlmis.onenetwork.integration.dto.StockOnHandForCsv;
+import org.openlmis.onenetwork.integration.dto.referencedata.ReasonType;
 import org.openlmis.onenetwork.integration.dto.referencedata.StockCardSummaries;
 import org.openlmis.onenetwork.integration.dto.referencedata.StockEvent;
 import org.openlmis.onenetwork.integration.dto.referencedata.StockEventLineItemDto;
 import org.openlmis.onenetwork.integration.service.referencedata.FacilityDataService;
 import org.openlmis.onenetwork.integration.service.referencedata.OrderableDataService;
+import org.openlmis.onenetwork.integration.service.referencedata.StockCardLineItemReasonDataService;
 import org.openlmis.onenetwork.integration.service.referencedata.StockCardSummariesService;
 import org.openlmis.onenetwork.integration.sftp.SftpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +65,7 @@ public class ProcessingService {
   private final OrderableBufferService orderableBufferService;
   private final StockEventBufferService stockEventBufferService;
   private final StockCardSummariesService stockCardSummariesService;
+  private final StockCardLineItemReasonDataService stockCardLineItemReasonDataService;
 
   /**
    * ProcessingService constructor.
@@ -73,12 +76,14 @@ public class ProcessingService {
                            OrderableBufferService orderableBufferService,
                            StockEventBufferService stockEventBufferService,
                            StockCardSummariesService stockCardSummariesService,
+                           StockCardLineItemReasonDataService stockCardLineItemReasonDataService,
                            SftpService sftpService) {
     this.orderableDataService = orderableDataService;
     this.facilityDataService = facilityDataService;
     this.orderableBufferService = orderableBufferService;
     this.stockEventBufferService = stockEventBufferService;
     this.stockCardSummariesService = stockCardSummariesService;
+    this.stockCardLineItemReasonDataService = stockCardLineItemReasonDataService;
     this.sftpService = sftpService;
   }
 
@@ -203,8 +208,18 @@ public class ProcessingService {
              .findWithId(lineItemDto.getOrderableId());
         String product = orderable.getFullProductName();
         String productCode = orderable.getProductCode();
-        String consumptionValue = lineItemDto.hasDestinationId()
-            ? String.valueOf(lineItemDto.getQuantity() * -1) : lineItemDto.getQuantity().toString();
+        String consumptionValue;
+        if (lineItemDto.hasReasonId()) {
+          ReasonType reasonType = stockCardLineItemReasonDataService
+              .findWithId(lineItemDto.getReasonId()).getReasonType();
+          consumptionValue = reasonType == ReasonType.CREDIT
+              ? String.valueOf(lineItemDto.getQuantity() * -1)
+              : lineItemDto.getQuantity().toString();
+        } else {
+          consumptionValue = lineItemDto.hasDestinationId()
+              ? String.valueOf(lineItemDto.getQuantity() * -1)
+              : lineItemDto.getQuantity().toString();
+        }
         String lastUpdate = lineItemDto.getOccurredDate().toString();
 
         Consumption consumption = new Consumption(product,

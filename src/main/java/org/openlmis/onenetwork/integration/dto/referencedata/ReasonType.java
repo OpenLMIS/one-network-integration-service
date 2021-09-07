@@ -15,28 +15,24 @@
 
 package org.openlmis.onenetwork.integration.dto.referencedata;
 
-import java.time.LocalDate;
-import java.util.Map;
-import java.util.UUID;
 import lombok.Getter;
 
-@Getter
-public class StockEventLineItemDto {
+public enum ReasonType {
+  CREDIT(2),
+  DEBIT(1),
+  BALANCE_ADJUSTMENT(0);
 
-  private UUID orderableId;
-  private UUID lotId;
-  private Integer quantity;
-  private Map<String, String> extraData;
-  private LocalDate occurredDate;
-  private UUID reasonId;
-  private UUID sourceId;
-  private UUID destinationId;
+  /**
+   * Value of this field will be used to set correct order of stock card line items if both
+   * occurred and processed dates have the same date for the following line items. It is
+   * important that types that are used to increase (like {@link #CREDIT}) should have higher
+   * priority than types that are used to decrease (like {@link #DEBIT}).
+   */
+  @Getter
+  private int priority;
 
-  public boolean hasReasonId() {
-    return this.reasonId != null;
+  ReasonType(int priority) {
+    this.priority = priority;
   }
 
-  public boolean hasDestinationId() {
-    return this.destinationId != null;
-  }
 }
