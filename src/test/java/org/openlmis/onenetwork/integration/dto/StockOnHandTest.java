@@ -21,20 +21,19 @@ import org.junit.Test;
 
 public class StockOnHandTest {
 
-  private static final String PRODUCT = "product";
   private static final String PRODUCT_CODE = "productCode";
   private static final String FACILITY = "facility";
   private static final String FACILITY_CODE = "facilityCode";
   private static final String SOH = "10";
 
   @Test
-  public void shouldConvertToSohForCsv() throws Exception {
-    StockOnHand stockOnHand = new StockOnHand(PRODUCT, PRODUCT_CODE, FACILITY, FACILITY_CODE, SOH);
+  public void shouldConvertToSohForCsv() {
+    StockOnHand stockOnHand = new StockOnHand(PRODUCT_CODE, FACILITY, FACILITY_CODE, SOH);
 
     StockOnHandForCsv stockOnHandForCsv = stockOnHand.toSohForCsv();
     assertThat(stockOnHandForCsv).isNotNull();
-    assertThat(stockOnHandForCsv.getItemName()).isEqualTo(PRODUCT + " - " + PRODUCT_CODE);
-    assertThat(stockOnHandForCsv.getSiteName()).isEqualTo(FACILITY + " - " + FACILITY_CODE);
+    assertThat(stockOnHandForCsv.getItemName()).isEqualTo(PRODUCT_CODE);
+    assertThat(stockOnHandForCsv.getSiteName()).isEqualTo(FACILITY + "-" + FACILITY_CODE);
     assertThat(stockOnHandForCsv.getOnHand()).isEqualTo(SOH);
   }
 }

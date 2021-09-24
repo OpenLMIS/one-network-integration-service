@@ -24,13 +24,12 @@ public class StockOnHand {
   /**
    * {@link StockOnHand} constructor.
    */
-  public StockOnHand(String product,
-                     String productCode,
+  public StockOnHand(String productCode,
                      String facility,
                      String facilityCode,
                      String stockOnHand) {
-    this.itemName = product + " - " + productCode;
-    this.siteName = facility + " - " + facilityCode;
+    this.itemName = productCode;
+    this.siteName = facility + "-" + facilityCode;
     this.onHand = stockOnHand;
   }
 

@@ -17,6 +17,7 @@ package org.openlmis.onenetwork.integration.service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -178,12 +179,10 @@ public class ProcessingService {
           Orderable orderable = orderableDataService
               .findWithId(stockCardSummaries.getOrderable().getId());
 
-          String product = orderable.getFullProductName();
           String productCode = orderable.getProductCode();
           DecimalFormat formatter = new DecimalFormat("###,###.###");
           String soh = formatter.format((double) stockCardSummaries.getStockOnHand());
-          StockOnHand stockOnHand = new StockOnHand(product,
-              productCode, facility, facilityCode, soh);
+          StockOnHand stockOnHand = new StockOnHand(productCode, facility, facilityCode, soh);
           sohList.add(stockOnHand);
         }
       }
@@ -206,7 +205,6 @@ public class ProcessingService {
       for (StockEventLineItemDto lineItemDto : stockEvent.getLineItems()) {
         Orderable orderable = orderableDataService
              .findWithId(lineItemDto.getOrderableId());
-        String product = orderable.getFullProductName();
         String productCode = orderable.getProductCode();
         String consumptionValue = "";
         if (lineItemDto.hasReasonId()) {
@@ -220,10 +218,10 @@ public class ProcessingService {
               ? String.valueOf(lineItemDto.getQuantity() * -1)
               : lineItemDto.getQuantity().toString();
         }
-        String lastUpdate = lineItemDto.getOccurredDate().toString();
+        ZonedDateTime lastUpdate = lineItemDto.getOccurredDate();
 
-        Consumption consumption = new Consumption(product,
-            productCode, facility, facilityCode, consumptionValue, lastUpdate);
+        Consumption consumption = new Consumption(productCode,
+            facility, facilityCode, consumptionValue, lastUpdate);
         consumptionList.add(consumption);
       }
     }

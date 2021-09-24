@@ -15,6 +15,9 @@
 
 package org.openlmis.onenetwork.integration.dto;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Consumption {
   private String itemName;
   private String siteName;
@@ -24,16 +27,15 @@ public class Consumption {
   /**
    * {@link Consumption} constructor.
    */
-  public Consumption(String product,
-                     String productCode,
+  public Consumption(String productCode,
                      String facility,
                      String facilityCode,
                      String consumption,
-                     String lastUpdate) {
-    this.itemName = product + " - " + productCode;
-    this.siteName = facility + " - " + facilityCode;
+                     ZonedDateTime lastUpdate) {
+    this.itemName = productCode;
+    this.siteName = facility + "-" + facilityCode;
     this.quantity = consumption;
-    this.demandTime = lastUpdate;
+    this.demandTime = lastUpdate.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
   }
 
   /**

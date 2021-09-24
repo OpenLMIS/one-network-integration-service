@@ -17,6 +17,9 @@ package org.openlmis.onenetwork.integration.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.junit.Test;
 
 public class ConsumptionTest {
@@ -25,15 +28,13 @@ public class ConsumptionTest {
   private static final String EACH = "EACH";
 
   @Test
-  public void shouldConvertToConsumptionForCsv() throws Exception {
-    String product = "product";
+  public void shouldConvertToConsumptionForCsv() {
     String productCode = "productCode";
     String facility = "facility";
     String facilityCode = "facilityCode";
     String consumpt = "10";
-    String lastUpdate = "2021-09-09";
-    Consumption consumption = new Consumption(product,
-        productCode,
+    ZonedDateTime lastUpdate = ZonedDateTime.now();
+    Consumption consumption = new Consumption(productCode,
         facility,
         facilityCode,
         consumpt,
@@ -41,12 +42,13 @@ public class ConsumptionTest {
 
     ConsumptionForCsv consumptionForCsv = consumption.toConsumptionForCsv();
     assertThat(consumptionForCsv).isNotNull();
-    assertThat(consumptionForCsv.getDemandTime()).isEqualTo(lastUpdate);
-    assertThat(consumptionForCsv.getItemName()).isEqualTo(product + " - " + productCode);
+    assertThat(consumptionForCsv.getDemandTime()).isEqualTo(lastUpdate
+        .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+    assertThat(consumptionForCsv.getItemName()).isEqualTo(productCode);
     assertThat(consumptionForCsv.getItemEnterpriseName()).isEqualTo(MANAGING_NAME);
     assertThat(consumptionForCsv.getQuantity()).isEqualTo(consumpt);
     assertThat(consumptionForCsv.getQuantityUom()).isEqualTo(EACH);
-    assertThat(consumptionForCsv.getSiteName()).isEqualTo(facility + " - " + facilityCode);
+    assertThat(consumptionForCsv.getSiteName()).isEqualTo(facility + "-" + facilityCode);
     assertThat(consumptionForCsv.getSiteEnterpriseName()).isEqualTo(MANAGING_NAME);
     assertThat(consumptionForCsv.getSiteOrganizationName()).isEqualTo(MANAGING_NAME);
   }
