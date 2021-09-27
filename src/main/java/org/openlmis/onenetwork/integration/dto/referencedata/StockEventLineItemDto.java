@@ -15,7 +15,7 @@
 
 package org.openlmis.onenetwork.integration.dto.referencedata;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class StockEventLineItemDto {
   private UUID lotId;
   private Integer quantity;
   private Map<String, String> extraData;
-  private ZonedDateTime occurredDate;
+  private LocalDate occurredDate;
   private UUID reasonId;
   private UUID sourceId;
   private UUID destinationId;

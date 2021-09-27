@@ -17,6 +17,7 @@ package org.openlmis.onenetwork.integration.service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -218,7 +219,9 @@ public class ProcessingService {
               ? String.valueOf(lineItemDto.getQuantity() * -1)
               : lineItemDto.getQuantity().toString();
         }
-        ZonedDateTime lastUpdate = lineItemDto.getOccurredDate();
+        ZonedDateTime lastUpdate = lineItemDto.getOccurredDate()
+            .atStartOfDay()
+            .atZone(ZoneId.of(timeZoneId));
 
         Consumption consumption = new Consumption(productCode,
             facility, facilityCode, consumptionValue, lastUpdate);
