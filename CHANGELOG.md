@@ -1,4 +1,10 @@
-0.0.1 / WIP
+Upcoming Version (WIP)
+==================
+
+Bug fixes:
+* [OLMIS-8223](https://openlmis.atlassian.net/browse/OLMIS-8223): Fixed apostrophes being dropped from translated messages.
+
+0.0.1 / 2021-10-29
 ==================
 
 New functionality added in a backwards-compatible manner:
